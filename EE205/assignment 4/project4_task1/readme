@@ -1,0 +1,4 @@
+20160788 InJe Hwang
+Project4 Task1
+
+I changed the type of arguments used in insertVertex and insertEdge int to T. So in my ADT_graph.cpp, node_value and edge_value now has T type(and also the two values in h file has T type too, which were not T type before).

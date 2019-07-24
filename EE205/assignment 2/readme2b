@@ -1,0 +1,24 @@
+20160788 InJe Hwang
+
+>Project #2b
+My receiver has 4 parts. single_receiver and double_receiver share same parts.
+-part1 : check file numbers
+-part2 : get message number, packet number, word and check they are valid
+-part3 : insert the message in the list
+-part4 : after all insertion, print messages one by one
+In part 1, my receiver checks whether there are two files or not.
+In part 2, I think that message number and packet number should be positive integers. So my receiver will check them whether the arguments are positive integers or not.
+And if there are any problems in input(missing packet number, missing word, etc.), my receiver gives error messages to the user and ignore the input.
+In part 3, my receiver uses multiple singly/doublly list.
+
+These are the test results
+
+<single receiver> 
+Running Time: 1 s.
+
+<double receiver>
+Running Time: 1 s.
+
+Two receiver program exhibit similar time. This is because except the functions of singly/doubly list, two receiver cpp file are almost same. They use same scheme to 
+solve the packet network problem. However, because the insert_before function of doubly list is more efficient than insert_before function of singly list, one can get
+better performance in double receiver if the input size become larger.

@@ -1,0 +1,35 @@
+20160788 InJe Hwang
+<About my program>
+I used my own list in yimacs.cpp, but I used both my own list and standard library list in yimacs_linked_list.cpp.
+I used replace_all function which was provided by TA in both yimacs.cpp and yimacs_linked_list.cpp.
+My program prints time at the end of the response. 
+
+<Implementaion results>
+20160788@eelab13:~/new_version$ g++ -std=c++11 yimacs_linked_list.cpp mylist.cpp
+20160788@eelab13:~/new_version$ ./a.out test.txt after.txt
+R HCM YEE!!
+
+< HCM
+> YEE!!
+
+time: 0.001229
+
+Q   
+20160788@eelab13:~/new_version$ g++ -std=c++11 yimacs.cpp mylist.cpp avl_tree.cpp
+20160788@eelab13:~/new_version$ ./a.out test.txt after.txt
+R HCM YEE!!
+
+< HCM
+> YEE!!
+
+time: 0.000521
+
+Q
+20160788@eelab13:~/new_version$ 
+
+<Explanation>
+Linked list based yimacs takes much more time than avl tree based yimacs. This is because list takes O(n) time for
+searching, but avl tree takes only O(log n) time. For replacing operation, the program needs to find the word that user
+wants to change. And, after the replacing operaiton, the program must update stored data. This operation also needs
+searching operation. Therefore, linked list based yimacs takes much more time than avl tree based yimacs, because it takes
+O(n) time for searching, while avl tree based tree takes O(log n).

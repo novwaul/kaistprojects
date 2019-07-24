@@ -1,0 +1,59 @@
+Homework #4
+
+1. Improving Sequences
+
+   Generalize seqn to allow one or more sub-expressions, instead of exactly two
+   sub-expressions:
+
+   <BFAE>  ::= ...
+             | {seqn <BFAE> <BFAE>*}
+
+   Example:
+
+   test(run("""{{fun {b} {seqn {setbox b {+ 2 {openbox b}}}
+                               {setbox b {+ 3 {openbox b}}}
+                               {setbox b {+ 4 {openbox b}}}
+                               {openbox b}}}
+                {newbox 1}}"""), "10")
+
+2. Records
+
+   Add "rec" and "get" forms for records, and also add set form
+   that modifies the value of a record field:
+
+   <BFAE>  ::= ...
+             | {rec {<id> <BFAE>}*}
+             | {get <BFAE> <id>}
+             | {set <BFAE> <id> <BFAE>}
+
+   A "rec" form allocates a new record. A "get" form accesses from the record
+   produced by the sub-expression the value of the field named by the identifier.
+   A "set" form changes within the record produced by the first sub-expression
+   the value of the field named by the identifer; the value of the second
+   sub-expression determines the field's new value, and that value is also the
+   result of the set expression. Note that changes within the record using the
+   field name that does not exist in the record print error messages containing
+   "no such field". Therefore, a "rec" is a mutable data structure as same as
+   a box. For example,
+
+   run("{{fun {r} {seqn {set r x 5} {get r x}}} {rec {x 1}}}")
+
+   the above expression returns "5" as a value. You can implement a record
+   in various ways, but using store is a possible option.
+
+- Here are some tests:
+
+    test(run("{seqn 1 2}"), "2")
+    test(run("{{fun {b} {openbox b}} {newbox 10}}"), "10")
+    test(run("{{fun {b} {seqn {setbox b 12} {openbox b}}} {newbox 10}}"), "12")
+    test(run("{{fun {b} {seqn {setbox b 12} {openbox b}}} {newbox 10}}"), "12")
+    test(run("{{fun {b} {openbox b}} {seqn {newbox 9} {newbox 10}}}"), "10")
+    test(run("{{{fun {b} {fun {a} {openbox b}}} {newbox 9}} {newbox 10}}"), "9")
+    test(run("{{fun {b} {seqn {setbox b 2} {openbox b}}} {newbox 1}}"), "2")
+    test(run("{{fun {b} {seqn {setbox b {+ 2 {openbox b}}} {setbox b {+ 3 {openbox b}}} {setbox b {+ 4 {openbox b}}} {openbox b}}} {newbox 1}}"), "10")
+    test(run("{{fun {r} {get r x}} {rec {x 1}}}"), "1")
+    test(run("{{fun {r} {seqn {set r x 5} {get r x}}} {rec {x 1}}}"), "5")
+    test(run("{{{{{fun {g} {fun {s} {fun {r1} {fun {r2} {+ {get r1 b} {seqn {{s r1} {g r2}} {+ {seqn {{s r2} {g r1}} {get r1 b}} {get r2 b}}}}}}}} {fun {r} {get r a}}} {fun {r} {fun {v} {set r b v}}}} {rec {a 0} {b 2}}} {rec {a 3} {b 4}}}"), "5")
+    test(run("{fun {x} x}"), "function")
+    test(run("{newbox 1}"), "box")
+    test(run("{rec}"), "record")

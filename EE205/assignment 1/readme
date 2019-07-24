@@ -1,0 +1,15 @@
+made by 20160788 InJe Hwang
+
+1. In Makefile, I designed the name of my program as "manager"
+
+2. When argumnet is not enough, my program will wait until user gives full input.
+
+3. When argument is over the standard, my program will accept first to third arguments(or just first argument) and ignore the other arguments.
+
+4. When print the information about a student, my program will print the index of the student, too.
+
+5. My program accepts the name and labname which are made only by alphabets and the student number which is made only by digits. Other formats of name, labname and student number are error.(For example, 'aaa' is acceptable for name and labname, but 'a1a' is unacceptable. Likewise, '111' is accceptable for stunum, but '1a1' is not acceptable. )
+
+6. My program will print a proper message according to the result of function. (For example, in compare_student function, if the members of indexed object and the members of user arugument based object are all same, then my program will print "Matched".)
+
+7. I make 'Error' class to throw the Error and 'Check' class to check the user input.

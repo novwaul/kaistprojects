@@ -1,0 +1,40 @@
+In Je Hwang
+20160788
+Assignment 5
+
+>Recieve Help : Won Yong Seo
+-adjustment about part 1 chunkbase.h
+>Give Help : None
+
+>Results
+      Executable         Test   Count   Size   Time        Mem
+===============================================================
+./testheapmgrgnu RandomRandom  100000   1000   0.06          0
+./testheapmgrgnu        Worst  100000   1000   0.05   27303936
+---------------------------------------------------------------
+./testheapmgrgnu RandomRandom  100000  10000   0.41          0
+./testheapmgrgnu        Worst  100000  10000   0.26  252289024
+===============================================================
+  ./testheapmgr2 RandomRandom  100000   1000   0.06   30189024
+  ./testheapmgr2        Worst  100000   1000   1.00 1641600000
+---------------------------------------------------------------
+  ./testheapmgr2 RandomRandom  100000  10000   0.23  233419104
+  ./testheapmgr2        Worst  100000  10000   2.80 1491229440
+===============================================================
+  ./testheapmgr1 RandomRandom  100000   1000   0.06   17138304
+  ./testheapmgr1        Worst  100000   1000  56.75   29680128
+---------------------------------------------------------------
+  ./testheapmgr1 RandomRandom  100000  10000   8.80  161155872
+  ./testheapmgr1        Worst  100000  10000 145.99  345359808
+===============================================================
+./testheapmgrbase RandomRandom  100000   1000   3.47   16613200
+./testheapmgrbase        Worst  100000   1000  38.65   27863600
+---------------------------------------------------------------
+./testheapmgrbase RandomRandom  100000  10000  27.83  160670800
+./testheapmgrbase        Worst  100000  10000  56.95  344564000
+===============================================================
+ ./testheapmgrkr RandomRandom  100000   1000   4.36   16613376
+ ./testheapmgrkr        Worst  100000   1000  29.20   28278784
+---------------------------------------------------------------
+ ./testheapmgrkr RandomRandom  100000  10000  48.38  164364288
+ ./testheapmgrkr        Worst  100000  10000 268.25  345800704

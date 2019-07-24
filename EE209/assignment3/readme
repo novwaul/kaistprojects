@@ -1,0 +1,79 @@
+Name : In Je Hwang
+Get help by : None
+Give help to : None
+About extra points : Hash Table expansion is implemented in RegisterCustomer()
+Explanation of the test results : 
+-Array
+> pros : It was fast than Hash Table in test 4. Array is faster than Hash in seeing 
+         entire nodes at once. I explained the reason of this result in "-Hash Table > cons".
+> cons : It was slow except test4. Becasue Array has to see all nodes, it takes more time
+         than Hash Table, usually.
+-Hash Table
+> pros : Considering Array data structure, all test results except test4 is faster
+         than the results of Array. Becasue Hash Table don't have to see all nodes, it can 
+         reduce a lot of time than Array, usually.
+> cons : Test result of test 4 is slower than the result of test 4 of Array. Array and Hash 
+         Table see the same number of nodes. But Hash Table has to do extra works to see the nodes.
+         (For example, before hash see nodes, it has to see whether bucket has nodes or not. 
+         However, array can see nodes directly.) Therefore, Hash Table is slower than Array in 
+         seeing entire nodes at once.
+         Also, register speed is quite slower than the other functions in Hash Table. Because
+         register function has to expand Hash Table, it needs more time than the other functions.
+
+*Test result*
+-Array
+---------------------------------------------------
+  Performance Test
+---------------------------------------------------
+[Test 1] Register 100000 users with RegisterCustomer()
+Finished registering 100000 users
+[elapsed time: 85613.929688 ms]
+
+[Test 2] Total sum of purchase of 100000 users
+         with GetPurchaseByName()
+Finished calculating the total sum = 1000000
+[elapsed time: 80211.906250 ms]
+
+[Test 3] Total sum of purchase of 100000 users
+         with GetPurchaseByID()
+Finished calculating the total sum = 1000000
+[elapsed time: 82188.906250 ms]
+
+[Test 4] Total sum of purchase of odd number users
+         with GetSumCustomerPurchase()
+Finished calculating the odd number user sum = 500000
+[elapsed time: 4.605000 ms]
+
+[Test 5] Unregister all the 100000 users
+         with UnregisterCustomerByName()
+Finished unregistering 100000 users
+[elapsed time: 114405.507812 ms]
+
+-Hash Table
+---------------------------------------------------
+  Performance Test
+---------------------------------------------------
+
+[Test 1] Register 100000 users with RegisterCustomer()
+Finished registering 100000 users
+[elapsed time: 3557.446045 ms]
+
+[Test 2] Total sum of purchase of 100000 users
+         with GetPurchaseByName()
+Finished calculating the total sum = 1000000
+[elapsed time: 413.661011 ms]
+
+[Test 3] Total sum of purchase of 100000 users
+         with GetPurchaseByID()
+Finished calculating the total sum = 1000000
+[elapsed time: 395.887024 ms]
+
+[Test 4] Total sum of purchase of odd number users
+         with GetSumCustomerPurchase()
+Finished calculating the odd number user sum = 500000
+[elapsed time: 8.454000 ms]
+
+[Test 5] Unregister all the 100000 users
+         with UnregisterCustomerByName()
+Finished unregistering 100000 users
+[elapsed time: 232.287994 ms]

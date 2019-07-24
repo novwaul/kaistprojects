@@ -1,0 +1,8 @@
+20160788 InJe Hwang
+
+>project #2a
+Insert functions of singly/doubly list check duplication. Because the insert functions uses pointer, the duplicated insertion will cause serious problems.
+For example, if user change some values in second element of the list, then he or she may unintentionally chagne the values of third element of the list
+which is actually same node(second element and third element are same one node). Therefore, my insert functions check duplication to prevent such errors.
+
+Other functions are implemented according to the requirements of instuctions.

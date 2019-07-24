@@ -1,0 +1,9 @@
+20160788 InJe Hwang
+Project4 - Task2
+
+I made new a variable and two new functions in ADT_Node class. So I attached ADT_graph.cpp and ADT_graph.h to show how I modified two files. The new variable set is used like a pointer that point to the set which contains this node. And two functions do operations like set the set and get set from a node.
+In SP(shortest path) function, I implemented it by inserting all the nodes that are connected with current node that is picked out of priority queue. To prevent picking non-sense node, the node must be checked whether it is recent version. This is controlled by comparing the version of the node and recent version that is stored in a vector. The node can access its own version using node value of the node. Also, the vector contains OUT indicater which indicate the related node is picked already. When a node is picked out, all the connected nodes of the node is examined. When they examined, they store the cuurent picked node name. So, when another node is picked, SP function can trace the previous node of the current node and finally it can find source node. SP function first contain each picked node in pre_sol and when it finds complete solution, it returns the solution. About time complexity, it follows O((n+m)log(n+m)) but, m =< n(n-1)/2, so it follows O((n+m)log(n)). 
+SP function and MST function uses dijkstra and kruskal algorithm.
+I created my own set and partition to implement MST function. In fact, the set variable of a node, which I mentioned before, is used for finding pointer that points to the set which contains the node and is contained in the vector.
+My program follows explicit command order that was introduced in proj4 pdf file. Only "graph.txt shortest_path_task.txt A.txt B.txt" will generate valid results. And, A.txt has shortest path solution and B.txt has MST solution.
+
