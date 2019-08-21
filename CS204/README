@@ -1,5 +1,4 @@
-# discrete-mathematics
-Programming Problems of Discrete Mathematics
+<Programming Problems of Discrete Mathematics>
 
 -PA1.
 James and his friends developed the game “Treasure Hunter” and they are now creating a hint system to get the users to see the ad. They decide to give only the shortest distance as a hint, but they have not yet implemented. So the developer James is looking for an algorithm to solve the problem.
