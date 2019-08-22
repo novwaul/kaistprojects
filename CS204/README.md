@@ -24,25 +24,7 @@ The each vertex of below graph G has index from ‘0’ to ‘9’ and letter fr
 For instance, sequence of string ‘BDDEA’ can be satisfied by vertex path [6,8,3,4,0]. If there is vertex path, print out the order of the characters given. If there is no path, the output will be -1. (The input string will have length more than 1)
 Implement python program to determine if there is possible vertex path.
 
-
-
-                __________________A (0)__________________
-               /                    |                    \
-              /                     |                     \
-             /                      |                      \ 
-            /                       |                       \
-           /                      A (4)                      \
-          /                      /    \                       \
-         /                      /      \                       \
-	E (4)-------- E (9) ---/--------\--- B (6) ------------B (1)
- 	 \		     \/          \/                    /
-          \                  /\          /\                   /
-           \                /  \        /  \                 /
-            \	           /    \______/__ C (7)            /
-             \           D (8)_______ /      |	           /
-              \           |                  |            /
-               \          |                  |	         /
-                \________D (3) ----------- C (2)________/
+![PA2](https://user-images.githubusercontent.com/53179332/63480534-29321a80-c4cd-11e9-97ff-c0788f545803.png)
 
 
 
