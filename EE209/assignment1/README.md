@@ -155,7 +155,7 @@ The program has to handle any input errors correctly. The program should scan th
 * The first word in a line should be a valid command. The first word refers to the first occurence of   a sequence of non-space characters. If an undefined command (anything other than exit, reg, unreg     and find) is given, the program should print out an error message "ERROR: Undefined Command" to       stderr. The following lines are example error cases:
 
 |Standard Input Stream	| Standard Error Stream |
-| *** | *** |
+|*** | ***|
 |undefcmd	| ERROR: Undefined Command |
 |undefcmd -i ygmoon	| ERROR: Undefined Command |
 |undefcmd -u UNDEFOPT	| ERROR: Undefined Command |
