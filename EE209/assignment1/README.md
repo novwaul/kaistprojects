@@ -155,7 +155,7 @@ The program has to handle any input errors correctly. The program should scan th
 * The first word in a line should be a valid command. The first word refers to the first occurence of   a sequence of non-space characters. If an undefined command (anything other than exit, reg, unreg     and find) is given, the program should print out an error message "ERROR: Undefined Command" to       stderr. The following lines are example error cases:
 
 |Standard Input Stream	| Standard Error Stream |
-|*** | ***|
+|---|---|
 |undefcmd	| ERROR: Undefined Command |
 |undefcmd -i ygmoon	| ERROR: Undefined Command |
 |undefcmd -u UNDEFOPT	| ERROR: Undefined Command |
@@ -166,14 +166,14 @@ The program has to handle any input errors correctly. The program should scan th
 * If an ambiguous option is used, the program should print an error message "ERROR: Ambiguous           Argument". In this program, the only case corresponding to this case is when both ID and NAME are     given to find or unreg:
 
 | Standard Input Stream	| Standard Error Stream |
-| *** | *** |
+| ---| --- |
 | find -i ch.hwang128 -n 'Changho Hwang' |	ERROR: Ambiguous Argument |
 | unreg -n 'Sangwook Bae' -i baesangwook89 |	ERROR: Ambiguous Argument |
 
 * If an invalid option (or valid option in a wrong format) is provided, the program should print an     error message "ERROR: Undefined Option". Here are the examples:
 
 | Standard Input Stream	| Standard Error Stream |
-| *** | *** |
+| --- | --- |
 | exit -i	| ERROR: Undefined Option |
 | exit -i ygmoon	| ERROR: Undefined Option |
 | find -p 1234	| ERROR: Undefined Option |
@@ -189,7 +189,7 @@ The program has to handle any input errors correctly. The program should scan th
 * If the option of the same type is provided multiple times in a command line, the program should       print out an error message, "ERROR: Multiple Same Options" regardless of whether the content of the   repeated argument is identical or not. Here are some examples:
 
 | Standard Input Stream	| Standard Error Stream |
-| *** | *** |
+| --- | --- |
 |find -i ch.hwang128 -i ch.hwang128	| ERROR: Multiple Same Options |
 | unreg -n 'YoungGyoun Moon' -n 'Changho Hwang'	| ERROR: Multiple Same Options |
 | reg -i baesangwook89 -p 9 -n 'Sangwook Bae' -p 432	| ERROR: Multiple Same Options |
@@ -197,7 +197,7 @@ The program has to handle any input errors correctly. The program should scan th
 * If a command ends prematurely, the program should print out an error message "ERROR: Need More       Option". Here are some examples:
 
 | Standard Input Stream	| Standard Error Stream |
-| *** | *** |
+| --- | --- |
 | find	| ERROR: Need More Option |
 | unreg	| ERROR: Need More Option |
 | reg -i baesangwook89 -n 'Sangwook Bae'	| ERROR: Need More Option |
