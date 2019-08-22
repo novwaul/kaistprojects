@@ -264,12 +264,12 @@ NAME Rules:
   |ABCD	|4|	ABCD1234|
   |a-bcd.asdf|	10|	a_bcd.asdf|
   |-n|	2|	''|
-  |\'|	1|	'|
+  |\\'|	1|	'|
   |'Kyoungsoo Park'|	14|	'Kyoungsoo Park|
   |Kyoungsoo\ Park|	14|	Kyoungsoo Park|
   |Kyoungsoo'Park	|14|	'Kyoungsoo'Park|
   |'Kyoungsoo\\'Park'|	14|	'Kyoungsoo'Park' |
-  |Kyoungsoo\-Park	|14|	\\'Kyoungsoo Park\\' |
+  |Kyoungsoo\\-Park	|14|	\\'Kyoungsoo Park\\' |
   |Kyoungsoo-Park	|14|	"Kyoungsoo Park" |
   |\ \ Kyoungsoo\ Park\ |	17|	Kyoungsoo\\!Park |
   |\\'Kyoungsoo\ Park\\'	|16|	"Kyoungsoo\ Park" |
