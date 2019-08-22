@@ -108,12 +108,12 @@ The basic features for the CLI are as below.
   | unreg -i ygmoon |
   
 * The find (search) command should take either an ID or a name of the customer to search. The           argument validation process of find is exactly the same as that of unreg while their real             operations are different.
-```bash 
+  ```bash 
   find -i ID
-```
-```bash
+  ```
+  ```bash
   find -n NAME
-```
+  ```
   The table below shows some examples of find.
 
   | Standard Input Stream	| Standard Error Stream |
@@ -124,8 +124,8 @@ The basic features for the CLI are as below.
   
 * There should be at least one space character (any space character except a new line character like   ' ', '\t', etc.) between the commands and options. Additional space characters are allowed at the     beginning, at the end and between the commands and options. You can use isspace function to match a   space character including a new line character. You may have to re-check whether a character is a     new line character to handle it exceptionally. The table below shows examples of this feature.
 
-| Standard Input Stream	| Standard Error Stream |
- |---|---|
+  | Standard Input Stream	| Standard Error Stream |
+  |---|---|
  |reg -i ch.hwang128 -n 'Changho Hwang' -p 431 | |	
  | reg    -i   baesangwook89 -n  'Sangwook Bae'   -p 2855 | |	
  | unreg  -i ygmoon	| |
@@ -141,20 +141,20 @@ The basic features for the CLI are as below.
   A program meets EOF when it reaches the end of a file stream. In most cases, a CLI program will not   meet EOF because if there is nothing to read in stdin, the program just waits until something is     typed in. However, you can make the CLI meet EOF using ^D(ctrl + d). Typing ^D forces the program     to read whatever is buffered at stdin immediately. If there is something typed already in stdin,     he program will read it, but if there is nothing in stdin, ^D forces the program to read EOF. You     can test your program whether it handles EOF properly by using this feature.
 
   For example, if you type in the following:
-```bash
-find -i abc
-```
+  ```bash
+  find -i abc
+  ```
   and then type ^D without enter ('\n'), the program will read 'find -i abc' and then will wait for     the rest of the command. If you continue to type in some more, for example,
-```bash
-def
-```
+  ```bash
+  def
+  ```
   and then type in ^D, the program will think that the entered command is 'find -i abcdef', and then   will wait again for the rest of the command. However, if you type in ^D one more time (still         without an enter), the program will read EOF and exit immediately, because there is nothing typed     additionaly in stdin. If the entered command was invalid, the program should print the               corresponding error message before exit. For more detail, please check how the given solution         binary works with ^D.
 
 The program has to handle any input errors correctly. The program should scan the input line from left to right, and when it encounters an error, it should print out an error message and stop processing the line. That is, it should stop at the first error it encounters and move on to the next input line.
 
 * The first word in a line should be a valid command. The first word refers to the first occurence of   a sequence of non-space characters. If an undefined command (anything other than exit, reg, unreg     and find) is given, the program should print out an error message "ERROR: Undefined Command" to       stderr. The following lines are example error cases:
 
-|Standard Input Stream	| Standard Error Stream |
+  |Standard Input Stream	| Standard Error Stream |
 |---|---|
 |undefcmd	| ERROR: Undefined Command |
 |undefcmd -i ygmoon	| ERROR: Undefined Command |
@@ -165,14 +165,14 @@ The program has to handle any input errors correctly. The program should scan th
 
 * If an ambiguous option is used, the program should print an error message "ERROR: Ambiguous           Argument". In this program, the only case corresponding to this case is when both ID and NAME are     given to find or unreg:
 
-| Standard Input Stream	| Standard Error Stream |
+  | Standard Input Stream	| Standard Error Stream |
 | ---| --- |
 | find -i ch.hwang128 -n 'Changho Hwang' |	ERROR: Ambiguous Argument |
 | unreg -n 'Sangwook Bae' -i baesangwook89 |	ERROR: Ambiguous Argument |
 
 * If an invalid option (or valid option in a wrong format) is provided, the program should print an     error message "ERROR: Undefined Option". Here are the examples:
 
-| Standard Input Stream	| Standard Error Stream |
+  | Standard Input Stream	| Standard Error Stream |
 | --- | --- |
 | exit -i	| ERROR: Undefined Option |
 | exit -i ygmoon	| ERROR: Undefined Option |
@@ -188,7 +188,7 @@ The program has to handle any input errors correctly. The program should scan th
 
 * If the option of the same type is provided multiple times in a command line, the program should       print out an error message, "ERROR: Multiple Same Options" regardless of whether the content of the   repeated argument is identical or not. Here are some examples:
 
-| Standard Input Stream	| Standard Error Stream |
+  | Standard Input Stream	| Standard Error Stream |
 | --- | --- |
 |find -i ch.hwang128 -i ch.hwang128	| ERROR: Multiple Same Options |
 | unreg -n 'YoungGyoun Moon' -n 'Changho Hwang'	| ERROR: Multiple Same Options |
@@ -196,7 +196,7 @@ The program has to handle any input errors correctly. The program should scan th
 
 * If a command ends prematurely, the program should print out an error message "ERROR: Need More       Option". Here are some examples:
 
-| Standard Input Stream	| Standard Error Stream |
+  | Standard Input Stream	| Standard Error Stream |
 | --- | --- |
 | find	| ERROR: Need More Option |
 | unreg	| ERROR: Need More Option |
