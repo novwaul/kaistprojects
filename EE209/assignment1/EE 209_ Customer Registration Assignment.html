@@ -1,0 +1,1113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0069)http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/cr/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta name="generator" content="HTML Tidy for Cygwin (vers 1st September 2004), see www.w3.org">
+<title>EE 209: Customer Registration Assignment</title>
+<style>
+    .change {color:red}
+</style></head>
+
+<body>
+<center>
+<h1>KAIST<br>
+EE 209: Programming Structures for EE</h1>
+
+<h2>Assignment 1: Customer Management Program<br>
+Part 1 - Argument Validation 
+</h2>
+
+</center>
+
+<hr>
+
+<h3>Purpose</h3>
+
+<p>The purpose of this assignment is to help you learn or review (1) the fundamentals of the C programming
+language, (2) the details of implementing command prompts in C, (3) how to use the GNU/Unix programming
+tools, especially <code>bash</code>, <code>emacs</code>, and <code>gcc209</code>.</p>
+
+<hr>
+
+<h3>Rules</h3>
+
+<p>Make sure you study the
+course <em><a href="http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/policy.shtml">Policy</a></em> web page
+before doing this assignment or any of the EE 209 assignments. In
+particular, note that you may consult with the course instructors, lab
+TAs, KLMS, etc. while doing assignments, as prescribed by that web
+page. However, there is one exception...</p>
+
+<p>Throughout the semester, each assignment will have an "on your own"
+part. You must do that part of the assignment <em>completely on your
+own</em>, without consulting with the course instructors, lab TAs,
+listserv, etc., except for clarification of requirements. You might
+think of the "on your own" part of each assignment as a small
+take-home exam.</p>
+
+<p>For this assignment, "checking for a missing or malformed option parameter"
+(as described below) is the "on your own"
+part. That part is worth 10% of this assignment.</p>
+
+<hr>
+
+<h3>Background</h3>
+
+<p> A <em>command-line interface (CLI)</em> is a means of interacting
+with a program where the user issues text commands to the program.</p>
+
+<p> A <em>command prompt</em> (or just <em>prompt</em>) is a string
+used in a CLI to inform and literally prompt the users to type
+commands. A prompt usually ends with one of the characters $, %, #, :,
+&gt;</p>
+
+<ul>
+<li>A bash shell, embedded in many Unix systems, uses a prompt of the form:
+<pre style="margin-left:2em; color:blue">[time] user@host: work_dir $
+</pre>
+</li>
+
+<li>DOS's COMMAND.COM and the Windows's command-line interpreter cmd.exe use the prompt
+of the form:
+<pre style="margin-left:2em; color:blue">C:\&gt;
+</pre>
+where 'C' represents the default main disk label in most modern systems.
+</li>
+</ul>
+
+<p>
+A <em>command-line argument</em> or parameter is an item of information delivered to a program
+when it is started. In Unix and Unix-like environments, an example of a command-line argument is:
+</p><pre style="margin-left:2em; color:blue">mkdir ee209
+</pre>
+where "ee209" is a command-line argument which tells the program mkdir to create a new folder named "ee209".
+
+<hr>
+
+<h3>The Task</h3>
+
+<p> In this assignment, your task is to write a simple CLI that
+validates user commmand for a customer management program as described
+below. </p>
+
+<hr>
+
+<h3>Customer Management Program</h3>
+
+<p>Throughout Assignment 1 and 3, you will develop a customer
+management program, which handles customer information and the
+operations on them. The requirements for the customer management
+program are:
+
+</p><ul>
+<li>A client can register a new customer and store her
+information.</li>
+<li>A client can unregister a customer and remove her
+information.</li>
+<li>A client can search for a customer and retrieve her
+information.</li>
+</ul>
+<p></p>
+
+The customer information to be managed includes:
+<ul>
+<li>ID: the online ID of the customer </li> 
+<li>Name: the name of the customer </li> 
+<li>Purchase amount: the amount of money that the customer has purchased </li>
+</ul>
+
+In this assignment, you only have to validate the command-line input
+line-by-line, i.e. your program will just read each line and
+check whether it is a valid command. If the command is
+invalid, the CLI prints out an error message to the standard
+error(<code>stderr</code>) stream and waits for the next command. If
+the command is valid, it does nothing and waits for the next
+command. There is no dependency between the commands.
+<p></p>
+
+<hr>
+
+<h3>Customer Management Program CLI</h3>
+
+We provide a sample <a href="http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/cr/src/client.c">skeleton code</a> for the
+customer management program CLI.  Your task in this assignment is to
+extend this code so that it supports all the command validation
+features explained below.  You can use your own skeleton code if you
+want, but it needs to behave <em>exactly the same</em> as described
+below.
+<p>The basic features for the CLI are as below.</p>
+<ul>
+<li>The CLI prints out a prompt of a form:
+<pre style="margin-left:2em; color:blue">&gt; 
+</pre>
+</li>
+<li>If an entered command-line includes spaces and a new line
+character(<code>'\n'</code>) only, the program should print the next
+prompt and wait for the next command-line.
+<pre style="margin-left:2em; color:blue">&gt; 
+
+&gt; 
+</pre>
+</li>
+<li>The <code>exit</code> command should exit the program imediately. This command should not take any argument.
+<pre style="margin-left:2em; color:blue">&gt; exit
+</pre>
+Note that <code>exit</code> command is already implemented in the skeleton code.
+<pre></pre>
+</li>
+<li>The <code>reg</code>(register) command should take
+three <em>arguments</em> - an ID, a name (NAME) and a purchase amount
+(PURCHASE) - of a customer to register.
+
+<p> A command-line has to specify the type before each argument. In
+our program, <code>'-i'</code>, <code>'-n'</code> and
+<code>'-p'</code> should proceed before the actual content of ID, NAME
+and PURCHASE, respectively. Note that there can be any number of
+spaces (except the new line character) between a type
+specifier(<code>-i, -n, -p</code>) and an argument. We call the
+combination of a type specifier and an argument
+an <em>option</em>. The order of the options is unimportant, but the
+CLI should not take duplicate options in the same line.
+
+</p><pre style="margin-left:2em; color:blue">reg -i ID -n NAME -p PURCHASE
+</pre>
+The table below shows some examples of <code>reg</code>.
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -i ch.hwang128 -n 'Changho Hwang' -p 123</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -n 'Sangwook Bae' -p 2090 -i baesangwook89</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -n 'YoungGyoun Moon' -i ygmoon -p 50492</code>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+</li>
+<li>The <code>unreg</code> (unregister) command should take either an ID <em>or</em> a name of a customer to unregister:
+<pre style="margin-left:2em; color:blue">unreg -i ID
+
+unreg -n NAME 
+</pre>
+The table below shows some real examples of using <code>unreg</code> command.
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg -i ch.hwang128</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg -n 'Sangwook Bae'</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg -i ygmoon</code>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+</li>
+<li>The <code>find</code> (search) command should take either an
+ID <em>or</em> a name of the customer to search. The argument
+validation process of <code>find</code> is exactly the same as that
+of <code>unreg</code> while their real operations are different.
+
+<pre style="margin-left:2em; color:blue">find -i ID
+
+find -n NAME
+</pre>
+The table below shows some examples of <code>find</code>.
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>find -n 'Changho Hwang'</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code>find -i baesangwook89</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code>find -n 'YoungGyoun Moon'</code>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+</li>
+<li>There should be at least one space character (any space character
+except a new line character like ' ', '\t', etc.) between the commands and
+options. 
+Additional space characters are allowed at the beginning, at the end
+and between the commands and options.
+You can use <code>isspace</code> function to match a space character
+including a new line character. You may have to re-check whether a
+character is a new line character to handle it exceptionally.
+The table below shows examples of this feature.
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>&nbsp;&nbsp;&nbsp;reg -i ch.hwang128 -n 'Changho Hwang' -p 431</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reg &nbsp;&nbsp;&nbsp;-i &nbsp;&nbsp;baesangwook89 -n &nbsp;'Sangwook Bae' &nbsp;&nbsp;-p 2855</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code> &nbsp;unreg &nbsp;-i ygmoon</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code> &nbsp;&nbsp;find -n &nbsp;&nbsp;&nbsp;'YoungGyoun Moon'</code>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td><code>reg-i ch.hwang128 -n 'Changho Hwang' -p 6523</code>
+</td>
+<td><code>ERROR: Undefined Command</code>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -i baesangwook89 -n 'Sangwook Bae'-p 64</code>
+</td>
+<td><code>ERROR: Invalid Option Argument</code>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg -iygmoon</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+</tbody>
+</table>
+The error messages will be explained below.
+<pre></pre>
+</li>
+<li> 
+<p>
+The CLI should handle EOF properly. If the program meets EOF, it means
+there is no more input to read, thus the program shouldn't require any
+more input and it should exit (by calling exit(0);) . Before exit, if
+the already-typed command is invalid, the program should print the
+corresponding error message and then exit immediately.
+</p>
+<p>
+A program meets EOF when it reaches the end of a file stream. In most
+cases, a CLI program will not meet EOF because if there is nothing to
+read in <code>stdin</code>, the program just waits until something is
+typed in. However, you can make the CLI meet EOF
+using <code>^D</code>(ctrl + d). Typing <code>^D</code> forces the
+program to read whatever is buffered at <code>stdin</code>
+immediately. If there is something typed already
+in <code>stdin</code>, the program will read it, but if there is
+nothing in <code>stdin</code>, <code>^D</code> forces the program to
+read EOF. You can test your program whether it handles EOF properly by
+using this feature.
+</p>
+<p>
+For example, if you type in the following:
+</p><pre style="margin-left:2em; color:blue">find -i abc
+</pre>
+<p>
+and then type <code>^D</code> without enter ('\n'), the program will
+read 'find -i abc' and then will wait for the rest of the command. If
+you continue to type in some more, for example, 
+</p><pre style="margin-left:2em; color:blue">def
+</pre>
+<p>
+and then type in <code>^D</code>, the program will think that the
+entered command is 'find -i abcdef', and then will wait again for the
+rest of the command.  However, if you type in <code>^D</code> one more
+time (still without an enter), the program will read EOF and exit
+immediately, because there is nothing typed additionaly
+in <code>stdin</code>.  If the entered command was invalid, the
+program should print the corresponding error message before exit. For
+more detail, please check how the given
+<a href="http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/cr/src/client">solution binary</a> works with <code>^D</code>.
+</p><pre></pre>
+</li>
+</ul>
+<p> The program has to handle any input errors correctly. The program
+should scan the input line from left to right, and when it encounters
+an error, it should print out an error message and stop processing the
+line. That is, it should stop at the first error it encounters and
+move on to the next input line.
+</p>
+
+<ul>
+<li> The first word in a line should be a valid command. The first
+word refers to the first occurence of a sequence of non-space
+characters. If an undefined command (anything other
+than <code>exit</code>, <code>reg</code>, <code>unreg</code>
+and <code>find</code>) is given, the program should print out an error
+message "<code>ERROR: Undefined Command</code>"
+to <code>stderr</code>. The following lines are example error cases:
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>undefcmd</code>
+</td>
+<td><code>ERROR: Undefined Command</code>
+</td>
+</tr>
+
+<tr>
+<td><code>undefcmd -i ygmoon</code>
+</td>
+<td><code>ERROR: Undefined Command</code>
+</td>
+</tr>
+
+<tr>
+<td><code>undefcmd -u UNDEFOPT</code>
+</td>
+<td><code>ERROR: Undefined Command</code>
+</td>
+</tr>
+
+<tr>
+<td><code>find-i ch.hwang128</code>
+</td>
+<td><code>ERROR: Undefined Command</code>
+</td>
+</tr>
+
+<tr>
+<td><code>fin -i baesangwook89</code>
+</td>
+<td><code>ERROR: Undefined Command</code>
+</td>
+</tr>
+
+<tr>
+<td><code>finda -i ygmoon</code>
+</td>
+<td><code>ERROR: Undefined Command</code>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+</li>
+<li>If an ambiguous option is used, the program should print an error
+message "<code>ERROR: Ambiguous Argument</code>". In this program, the
+only case corresponding to this case is when both ID and NAME are 
+given to find or unreg:
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>find -i ch.hwang128 -n 'Changho Hwang'</code>
+</td>
+<td><code>ERROR: Ambiguous Argument</code>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg -n 'Sangwook Bae' -i baesangwook89</code>
+</td>
+<td><code>ERROR: Ambiguous Argument</code>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+</li>
+<li>If an invalid option (or valid option in a wrong format) is provided, the program should print an error message "<code>ERROR: Undefined Option</code>". Here are the examples:
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>exit -i </code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>exit -i ygmoon</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>find -p 1234</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg -p 54512</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -u UNDEFOPT</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -i ch.hwang128 -n 'Changho Hwang' -p</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg - </code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg -n </code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -i baesangwook89 -n 'Sangwook Bae' -p 654 -u UNDEFOPT</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>reg baesangwook89</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -n 'Sangwook Bae' baesangwook89</code>
+</td>
+<td><code>ERROR: Undefined Option</code>
+</td>
+</tr>
+
+</tbody>
+</table>
+<pre></pre>
+</li>
+<li>If the option of the same type is provided multiple times in a
+command line, the program should print out an error message,
+"<code>ERROR: Multiple Same Options</code>" regardless of whether the
+content of the repeated argument is identical or not. Here are some
+examples:
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>find -i ch.hwang128 -i ch.hwang128</code>
+</td>
+<td><code>ERROR: Multiple Same Options</code>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg -n 'YoungGyoun Moon' -n 'Changho Hwang'</code>
+</td>
+<td><code>ERROR: Multiple Same Options</code>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -i baesangwook89 -p 9 -n 'Sangwook Bae' -p 432</code>
+</td>
+<td><code>ERROR: Multiple Same Options</code>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+</li>
+<li>If a command ends prematurely, the program should print out an
+error message "<code>ERROR: Need More Option</code>". Here
+are some examples:
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Standard Input Stream</strong>
+</td>
+<td><strong>Standard Error Stream</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>find</code>
+</td>
+<td><code>ERROR: Need More Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>unreg</code>
+</td>
+<td><code>ERROR: Need More Option</code>
+</td>
+</tr>
+
+<tr>
+<td><code>reg -i baesangwook89 -n 'Sangwook Bae'</code>
+</td>
+<td><code>ERROR: Need More Option</code>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+Note that this error case has the lowest priority among other error cases.
+<pre></pre>
+</li>
+<li>Finally, if an argument doesn't follow the 'Argument Rules'
+described below, the program should print out an error message
+"<code>ERROR: Invalid Option Argument</code>". This will be explained
+precisely in the next section, 'Arugment Rules'.
+<pre></pre>
+</li>
+</ul>
+
+Note these things: <br>
+1. The program should stop processing the current line when it encounters an error. <br>
+2. All error messages should go out to stderr.<br>
+3. Nothing is printed (either to stdout or stderr) if there's no error in the line.<br>
+4. The error messages should be exactly the same as described above.<br>
+
+<hr>
+
+<h3>Argument Rules</h3>
+
+<p>Your CLI have to handle three argument types, ID, name (NAME), and
+purchase amount (PURCHASE). Each argument should meet the following
+rules.
+
+</p><p>ID Rules:</p>
+<ul>
+<li>It consists of alphabets, digits, hyphens('-'), underscores('_') and periods('.'). </li>
+<li>The maximum length is 63, and the minimum length is 1.</li>
+<li>The table below shows some real examples of an ID: 
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Valid ID</strong>
+</td>
+<td><strong>Invalid ID</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>aaaa</code>
+</td>
+<td><code>abcd!</code>
+</td>
+</tr>
+
+<tr>
+<td><code>ABCD1234</code>
+</td>
+<td><code>ABCD#1234</code>
+</td>
+</tr>
+
+<tr>
+<td><code>a-bcd_123</code>
+</td>
+<td><code>hello@gmail.com</code>
+</td>
+</tr>
+
+<tr>
+<td><code>-n</code>
+</td>
+<td><code>&#65533;쒓&#65533;&#65533;꾩씠&#65533;&#65533;</code>
+</td>
+</tr>
+
+<tr>
+<td><code>5.......abcd....</code>
+</td>
+<td><code>*^^*</code>
+</td>
+</tr>
+
+<tr>
+<td><code>---------------</code>
+</td>
+<td><code>Kyoungsoo Park</code>
+</td>
+</tr>
+
+<tr>
+<td><code>1234567890</code>
+</td>
+<td><code>'KyoungsooPark'</code>
+</td>
+</tr>
+
+<tr>
+<td><code>_________________</code>
+</td>
+<td><code></code>
+</td>
+</tr>
+
+<tr>
+<td><code>.a-b.c_d-1.2-3_4.</code>
+</td>
+<td><code>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</code>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+</li>
+</ul>
+
+<p>PURCHASE Rules:</p>
+<ul>
+<li>It consists of one or more digits. It should be a positive integer. </li>
+<li>A multi-digit value that starts with '0' is not allowed. </li>
+<li>The number of digits cannot exceed 10.</li>
+<li>The table below shows some real examples of a PURCHASE:
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Valid PURCHASE</strong>
+</td>
+<td><strong>Invalid PURCHASE</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>0</code>
+</td>
+<td><code>01</code>
+</td>
+</tr>
+
+<tr>
+<td><code>402</code>
+</td>
+<td><code>042</code>
+</td>
+</tr>
+
+<tr>
+<td><code>4002</code>
+</td>
+<td><code>0402</code>
+</td>
+</tr>
+
+<tr>
+<td><code>1234</code>
+</td>
+<td><code>-1234</code>
+</td>
+</tr>
+
+<tr>
+<td><code>9999999999</code>
+</td>
+<td><code>55555555555</code>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+</li>
+</ul>
+
+<p>NAME Rules:</p>
+<ul>
+
+<li>It consists of alphabets, hyphens('-'), periods('.'), spaces(' ')
+or a single quote('''). All other characters can't be used for a name
+(e.g., backslash ('\') and double quote ('"') are not valid
+characters for a name) </li>
+
+<li> A name can be enclosed with a pair of single quote (''') characters 
+(called enclosers). An enclosed name is useful to represent spaces 
+in a name.  An encloser is not a part of a name. </li>
+
+<li> A backslash character ('\') can be used as an escape character.
+While an escape character is useful to represent a space or a single
+quote character in a name, it can be used with any other valid
+character. It can be used either in an enclosed name or in a barefoot
+name (without enclosers). An escape character is not a part of a
+name. </li>
+
+<font color="#FF0000">
+<li> Note again that an escape character is used only for a charcter
+which is a part of a name, which means that it cannot be used for an
+encloser because an encloser is not a part of a name. Thus when a name
+starts with a backslash character followed by a single quote, the single
+quote is just a normal valid character, not an encloser.</li>
+</font>
+
+<li>The length of a name should be between 1 and 63.</li>
+
+<table style="border-collapse: collapse;" border="3">
+<tbody>
+<tr>
+<td><strong>Valid NAME</strong>
+</td>
+<td><strong>NAME Length</strong>
+</td>
+<td><strong>Invalid NAME</strong>
+</td>
+</tr>
+
+<tr>
+<td><code>aaaa</code>
+</td>
+<td>4
+</td>
+<td><code>aaaa!</code>
+</td>
+</tr>
+
+<tr>
+<td><code>ABCD</code>
+</td>
+<td>4
+</td>
+<td><code>ABCD1234</code>
+</td>
+</tr>
+
+<tr>
+<td><code>a-bcd.asdf</code>
+</td>
+<td>10
+</td>
+<td><code>a_bcd.asdf</code>
+</td>
+</tr>
+
+<tr>
+<td><code>-n</code>
+</td>
+<td>2</td>
+<td><code>''</code>
+</td>
+</tr>
+
+<tr>
+<td><code>\'</code>
+</td>
+<td>1</td>
+<td><code>'</code>
+</td>
+</tr>
+
+<tr>
+<td><code>'Kyoungsoo Park'</code>
+</td>
+<td>14</td>
+<td><code>'Kyoungsoo Park</code>
+</td>
+</tr>
+
+<tr>
+<td><code>Kyoungsoo\ Park</code>
+</td>
+<td>14</td>
+<td><code>Kyoungsoo Park</code>
+</td>
+</tr>
+
+<tr>
+<td><code>Kyoungsoo'Park</code>
+</td>
+<td>14</td>
+<td><code>'Kyoungsoo'Park</code>
+</td>
+</tr>
+
+<tr>
+<td><code>'Kyoungsoo\'Park'</code>
+</td>
+<td>14</td>
+<td><code>'Kyoungsoo'Park'</code>
+</td>
+</tr>
+
+<tr>
+<td><code>Kyoungsoo\-Park</code>
+</td>
+<td>14</td>
+<td><code>\'Kyoungsoo Park\'</code>
+</td>
+</tr>
+
+<tr>
+<td><code>Kyoungsoo-Park</code>
+</td>
+<td>14</td>
+<td><code>"Kyoungsoo Park"</code>
+</td>
+</tr>
+
+<tr>
+<td><code>\ \ Kyoungsoo\ Park\&nbsp;</code>
+</td>
+<td>17</td>
+<td><code>Kyoungsoo\!Park</code>
+</td>
+</tr>
+
+<tr>
+<td><code>\'Kyoungsoo\ Park\'</code>
+</td>
+<td>16</td>
+<td><code>"Kyoungsoo\ Park"</code>
+</td>
+</tr>
+
+<tr>
+<td><code>Kyoungsoo\Park</code>
+</td>
+<td>13</td>
+<td><code>'Kyoungsoo Park\'</code>
+</td>
+</tr>
+</tbody>
+</table>
+<pre></pre>
+
+</ul>
+
+<p>
+Note that a poorly-specified NAME arugment can be interpreted as a
+different error in a command line. For example, if <code>Kyoungsoo
+Park</code> was given as a NAME argument, the program would
+consider <code>Kyoungsoo</code> as a valid name argument
+because <code>Kyoungsoo</code> itself meets all requirements of the
+NAME rule. After that, the program will read <code>Park</code>
+considering it as another option, which is undefined. Thus the program
+should print <code>ERROR: Undefined Option</code>.</p>
+
+<hr>
+
+<h3>Design</h3>
+
+<p>Design your CLI program to process each kinds of commands seperately with each other. The basic structure of the program is suggested in the <a href="http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/cr/src/client.c">skeleton code</a>. Define your own functions properly so that a single function doesn't get too long. Try to reuse the defined functions as much as possible so that you don't have to write redundant code.
+
+</p><p>We suggest you to use a <em>deterministic finite state automaton</em> (<em>DFA</em>, alias <em>FSA</em>) to validate a NAME argument. The DFA concept is described in lectures, and in Section 7.3 of the book <em>Introduction to CS</em> (Sedgewick and Wayne). 
+
+</p><p>Generally, a (large) C program should consist of of multiple source code files. For this assignment, you need not split your source code into multiple files. Instead you may place all source code in a single source code file. Subsequent assignments will ask you to write programs consisting of multiple source code files.</p>
+
+<p>We suggest that your program use the standard C <code>getchar</code> function to read characters from the standard input stream. Actually, <code>fgets</code> function is generally used to implement option parsing, but we are using <code>getchar</code> here as we didn't learn <code>fgets</code> and some related concepts such as arrays yet.</p>
+
+<hr>
+
+
+<h3>Logistics</h3>
+
+<p>You should create your program on the lab machines cluster using <code>bash</code>, <code>emacs</code>, and <code>gcc209</code>.</p>
+
+<h4>Step 1: Design Overall Structure</h4>
+
+<p>Before you jump in to programming, make an overall plan how to design your program. Read carefully and understand the <a href="http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/cr/src/client.c">skeleton code</a> so that you can check what is already done and what you have to do additionally.</p>
+
+<h4>Step 2: Create Source Code</h4>
+
+<p>Use <code>emacs</code> to create source code in a file named <code>client.c</code> that implements your CLI.</p>
+
+<h4>Step 3: Preprocess, Compile, Assemble, and Link</h4>
+
+<p>Use the <code>gcc209</code> command to preprocess, compile, assemble, and link your program. Perform each step individually, and examine the intermediate results to the extent possible.</p>
+
+<h4>Step 4: Execute</h4>
+
+<p>Execute your program multiple times on various input commands that test all logical paths through your code. You can also use test input files provided. Download <a href="http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/cr/src/test.tar.gz"><code>test.tar.gz</code></a> on a lab machine and extract the file by issuing the following command:
+</p><pre style="margin-left:2em; color:blue">tar zxvf test.tar.gz
+</pre>
+<p>Then you will find test files in <code>test/</code> directory. All commands in each test file which were named an error case, <code>test_invalid_arg</code>, <code>test_undef_cmd</code>, <code>test_unclear_id</code>, <code>test_need_opt</code> and <code>test_undef_opt</code> should print the corresponding error message for that error case, and the other test files should not print any error messages. You can use these files by redirecting these files to your program. For example, if your program is named by <code>client</code>, you can test it with the following command:
+</p><pre style="margin-left:2em; color:blue">./client &lt; test_file_path
+</pre>
+which the <code>test_file_path</code> should be replaced by the path to the test file you want to test with. Note that you can open and read these test files using <code>emacs</code> to check what commands are there.
+<p></p>
+<p>We also provide the <a href="http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/cr/src/client">solution binary</a> created by TAs. If there are any unclear part in this assignment, you can see what the solution binary does and compare it with yours.</p>
+
+<h4>Step 5: Create a <code>readme</code> File</h4>
+
+<p>Use <code>emacs</code> to create a text file named <code>readme</code> (not <code>readme.txt</code>, or <code>README</code>, or <code>Readme</code>, etc.) that contains:</p>
+
+<ul>
+<li>Your name, student ID, and the assignment number.</li>
+
+<li>A description of whatever help (if any) you received from others while doing the assignment, and the names of any individuals with whom you collaborated, as prescribed by the course Policy web page.</li>
+
+<li>(Optionally) An indication of how much time you spent doing the assignment.</li>
+
+<li>(Optionally) Your assessment of the assignment: Did it help you to learn? What did it help you to learn? Do you have any suggestions for improvement? Etc.</li>
+
+<li>(Optionally) Any information that will help us to grade your work in the most favorable light. In particular you should describe all known bugs.</li>
+</ul>
+
+<p>Descriptions of your code should not be in the <code>readme</code> file. Instead they should be integrated into your code as comments.</p>
+
+<p>Your <code>readme</code> file should be a plain text file. Don't create your <code>readme</code> file using Microsoft Word, Hangul (HWP) or any other word processor.</p>
+
+<h4>Step 6: Submit</h4>
+
+<p> Your submission should include your <code>client.c</code> file and your <code>readme</code> file.
+
+</p><p>
+Create a local directory named 'YourID_assign1' and place all your files in it. Then, <code>tar</code> your submission file by issuing the following command on a lab machine (assuming your ID is 20151234):</p>
+
+<pre style="margin-left:2em; color:blue">mkdir 20151234_assign1
+mv client.c readme 20151234_assign1
+tar zcf 20151234_assign1.tar.gz 20151234_assign1
+</pre>
+
+<p>
+Upload your submission file (20151234_assign1.tar.gz) to our KLMS assignment submission page. We do not accept e-mail submission (unless our course KLMS page is down).
+</p>
+<hr>
+
+
+<h3>Grading</h3>
+
+<p>We will grade your work on two kinds of quality: quality from <em>the user's</em> point of view, and quality from <em>the programmer's</em> point of view. To encourage good coding practices, we will deduct points if <code>gcc209</code> generates warning messages.</p>
+
+<p>From the user's point of view, a program has quality if it behaves as it should. The correct behavior of your program is defined by the previous sections of this assignment specification.
+
+</p><p>From the programmer's point of view, a program has quality if it is well styled and thereby easy to maintain. In part, style is defined by the rules given in <em>The Practice of Programming</em> (Kernighan and Pike), as summarized by the <a href="http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/style.pdf">Rules of Programming Style</a> document. For this assignment we will pay particular attention to rules 1-24. These additional rules apply:</p>
+
+<ul>
+<li><strong>Names</strong>: You should use a clear and consistent style for variable and function names. One example of such a style is to prefix each variable name with characters that indicate its type. For example, the prefix <code>c</code> might indicate that the variable is of type <code>char</code>, <code>i</code> might indicate <code>int</code>, <code>pc</code> might mean <code>char*</code>, <code>ui</code> might mean <code>unsigned int</code>, etc. But it is fine to use another style -- a style that does not include the type of a variable in its name -- as long as the result is a clear and readable program.</li>
+
+<li><strong>Comments</strong>: Each source code file should begin with a comment that includes your name, the number of the assignment, and the name of the file.</li>
+
+<li><strong>Comments</strong>: Each function -- especially the <code>main</code> function -- should begin with a comment that describes <em>what the function does</em> from the point of view of the caller. (The comment should not describe <em>how the function works</em>.) It should do so by <em>explicitly</em> referring to the function's parameters and return value. The comment also should state what, if anything, the function reads from the standard input stream or any other stream, and what, if anything, the function writes to the standard output stream, the standard error stream, or any other stream. Finally, the function's comment should state which global variables the function uses or affects. In short, a function's comments should describe the flow of data into and out of the function.</li>
+
+<li><strong>Function modularity</strong>: Your program should not consist of one large <code>main</code> function. Instead your program should consist of multiple small functions, each of which performs a single well-defined task. For example, you might create one function to implement each argument validation of your CLI.</li>
+
+<li><strong>Line lengths</strong>: Limit line lengths in your source code to 72 characters. Doing so allows us to print your work in two columns, thus saving paper.</li>
+</ul>
+
+<hr>
+
+<h3>Special Note</h3>
+
+<p>As prescribed by Kernighan and Pike style rule 25, generally you should avoid using global variables. Instead all communication of data into and out of a function should occur via the function's parameters and its return value. You should use ordinary <em>call-by-value</em> parameters to communicate data from a calling function to your function. You should use your function's return value to communicate data from your function back to its calling function. You should use <em>call-by-reference</em> parameters to communicate additional data from your function back to its calling function, or as bi-directional channels of communication.</p>
+
+<p>However, call-by-reference involves using pointer variables, which we have not discussed yet. So for this assignment you may use global variables instead of call-by-reference parameters. (But we encourage you to use call-by-reference parameters.)</p>
+
+<p>In short, you should use ordinary call-by-value function parameters and function return values in your program as appropriate. But you need not use call-by-reference parameters; instead you may use global variables. In subsequent assignments you should use global variables only when there is a good reason to do so.</p>
+
+
+
+</body></html>
