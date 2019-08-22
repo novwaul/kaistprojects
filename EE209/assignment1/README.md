@@ -20,14 +20,19 @@ A command-line interface (CLI) is a means of interacting with a program where th
 
 A command prompt (or just prompt) is a string used in a CLI to inform and literally prompt the users to type commands. A prompt usually ends with one of the characters $, %, #, :, >
 
-A bash shell, embedded in many Unix systems, uses a prompt of the form:
-[time] user@host: work_dir $
-DOS's COMMAND.COM and the Windows's command-line interpreter cmd.exe use the prompt of the form:
-C:\>
-where 'C' represents the default main disk label in most modern systems.
+* A bash shell, embedded in many Unix systems, uses a prompt of the form:
+
+  [time] user@host: work_dir $
+
+* DOS's COMMAND.COM and the Windows's command-line interpreter cmd.exe use the prompt of the form:
+
+  C:\>
+
+  where 'C' represents the default main disk label in most modern systems.
+  
 A command-line argument or parameter is an item of information delivered to a program when it is started. In Unix and Unix-like environments, an example of a command-line argument is:
 
-mkdir ee209
+  mkdir ee209
 
 where "ee209" is a command-line argument which tells the program mkdir to create a new folder named "ee209".
 
