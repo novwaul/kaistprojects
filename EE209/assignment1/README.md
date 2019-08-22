@@ -212,3 +212,77 @@ Note these things:
 2. All error messages should go out to stderr.
 3. Nothing is printed (either to stdout or stderr) if there's no error in the line.
 4. The error messages should be exactly the same as described above.
+
+#### Argument Rules
+
+Your CLI have to handle three argument types, ID, name (NAME), and purchase amount (PURCHASE). Each argument should meet the following rules.
+
+ID Rules:
+
+* It consists of alphabets, digits, hyphens('-'), underscores('_') and periods('.').
+* The maximum length is 63, and the minimum length is 1.
+* The table below shows some real examples of an ID:
+
+  | Valid ID	| Invalid ID|
+  |---|---|
+  |aaaa	|abcd!|
+  |ABCD1234	|ABCD#1234|
+  |a-bcd_123|	hello@gmail.com|
+  |-n|	�쒓��꾩씠��|
+  |5.......abcd....	| *^^*|
+  |---------------	|Kyoungsoo Park|
+  |1234567890	|'KyoungsooPark'|
+  | \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ ||	
+  |.a-b.c_d-1.2-3_4.	|aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa |
+
+PURCHASE Rules:
+
+* It consists of one or more digits. It should be a positive integer.
+* A multi-digit value that starts with '0' is not allowed.
+* The number of digits cannot exceed 10.
+* The table below shows some real examples of a PURCHASE:
+
+  |Valid PURCHASE|	Invalid PURCHASE|
+  |---|---|
+  |0 |	01|
+  |402 |	042|
+  |4002 |	0402|
+  |1234 |	-1234|
+  |9999999999 |	55555555555|
+  
+NAME Rules:
+
+* It consists of alphabets, hyphens('-'), periods('.'), spaces(' ') or a single quote('''). All other   characters can't be used for a name (e.g., backslash ('\') and double quote ('"') are not valid characters for a name)
+* A name can be enclosed with a pair of single quote (''') characters (called enclosers). An enclosed name is useful to represent spaces in a name. An encloser is not a part of a name.
+* A backslash character ('\') can be used as an escape character. While an escape character is useful to represent a space or a single quote character in a name, it can be used with any other valid character. It can be used either in an enclosed name or in a barefoot name (without enclosers). An escape character is not a part of a name.
+* Note again that an escape character is used only for a charcter which is a part of a name, which means that it cannot be used for an encloser because an encloser is not a part of a name. Thus when a name starts with a backslash character followed by a single quote, the single quote is just a normal valid character, not an encloser.
+* The length of a name should be between 1 and 63.
+
+  | Valid NAME|	NAME Length|	Invalid NAME|
+  |---|---|---|
+  |aaaa|	4|	aaaa!|
+  |ABCD	|4|	ABCD1234|
+  |a-bcd.asdf|	10|	a_bcd.asdf|
+  |-n|	2|	''|
+  |\'|	1|	'|
+  |'Kyoungsoo Park'|	14|	'Kyoungsoo Park|
+  |Kyoungsoo\ Park|	14|	Kyoungsoo Park|
+  |Kyoungsoo'Park	|14|	'Kyoungsoo'Park|
+  |'Kyoungsoo\\'Park'|	14|	'Kyoungsoo'Park' |
+  |Kyoungsoo\-Park	|14|	\\'Kyoungsoo Park\\' |
+  |Kyoungsoo-Park	|14|	"Kyoungsoo Park" |
+  |\ \ Kyoungsoo\ Park\ |	17|	Kyoungsoo\\!Park |
+  |\\'Kyoungsoo\ Park\\'	|16|	"Kyoungsoo\ Park" |
+  |Kyoungsoo\Park	|13	|'Kyoungsoo Park\\' |
+
+Note that a poorly-specified NAME arugment can be interpreted as a different error in a command line. For example, if Kyoungsoo Park was given as a NAME argument, the program would consider Kyoungsoo as a valid name argument because Kyoungsoo itself meets all requirements of the NAME rule. After that, the program will read Park considering it as another option, which is undefined. Thus the program should print ERROR: Undefined Option.
+
+#### Design
+
+Design your CLI program to process each kinds of commands seperately with each other. The basic structure of the program is suggested in the skeleton code. Define your own functions properly so that a single function doesn't get too long. Try to reuse the defined functions as much as possible so that you don't have to write redundant code.
+
+We suggest you to use a deterministic finite state automaton (DFA, alias FSA) to validate a NAME argument. The DFA concept is described in lectures, and in Section 7.3 of the book Introduction to CS (Sedgewick and Wayne).
+
+Generally, a (large) C program should consist of of multiple source code files. For this assignment, you need not split your source code into multiple files. Instead you may place all source code in a single source code file. Subsequent assignments will ask you to write programs consisting of multiple source code files.
+
+We suggest that your program use the standard C getchar function to read characters from the standard input stream. Actually, fgets function is generally used to implement option parsing, but we are using getchar here as we didn't learn fgets and some related concepts such as arrays yet.
