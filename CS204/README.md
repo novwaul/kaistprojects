@@ -16,7 +16,7 @@ James and his friends developed the game “Treasure Hunter” and they are now 
 5. If there is no path to treasure, return -1.
 
 * Example) 5x5 maps
-![PA1](\Users\123dl\Desktop\PA1.png)
+![PA1](https://user-images.githubusercontent.com/53179332/63480423-c6408380-c4cc-11e9-8c40-fe0245788194.png)
 
 PA2
 ---
