@@ -5,9 +5,9 @@ PA1
 ---
 James and his friends developed the game “Treasure Hunter” and they are now creating a hint system to get the users to see the ad. They decide to give only the shortest distance as a hint, but they have not yet implemented. So the developer James is looking for an algorithm to solve the problem.
 
-Hint system: Find the shortest distance to treasure in the map
-INPUT: Map
-OUTPUT: The shortest distance from start position to treasure 
+Hint system: Find the shortest distance to treasure in the map.
+INPUT: Map.
+OUTPUT: The shortest distance from start position to treasure.
 Restriction:
 1. Start position : (1, 1)
 2. m, n : 1~10 (except m=n=1)
