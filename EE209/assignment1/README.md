@@ -21,19 +21,19 @@ A command-line interface (CLI) is a means of interacting with a program where th
 A command prompt (or just prompt) is a string used in a CLI to inform and literally prompt the users to type commands. A prompt usually ends with one of the characters $, %, #, :, >
 
 * A bash shell, embedded in many Unix systems, uses a prompt of the form:
-
-  [time] user@host: work_dir $
-
+    ```bash
+    [time] user@host: work_dir $
+    ```
 * DOS's COMMAND.COM and the Windows's command-line interpreter cmd.exe use the prompt of the form:
-
-  C:\>
-
+    ```bash
+    C:\>
+    ```
   where 'C' represents the default main disk label in most modern systems.
   
 A command-line argument or parameter is an item of information delivered to a program when it is started. In Unix and Unix-like environments, an example of a command-line argument is:
-
+  ```bash
   mkdir ee209
-
+  ```
 where "ee209" is a command-line argument which tells the program mkdir to create a new folder named "ee209".
 
 #### The Task
@@ -56,3 +56,119 @@ The customer information to be managed includes:
 
 In this assignment, you only have to validate the command-line input line-by-line, i.e. your program will just read each line and check whether it is a valid command. If the command is invalid, the CLI prints out an error message to the standard error(stderr) stream and waits for the next command. If the command is valid, it does nothing and waits for the next command. There is no dependency between the commands.
 
+#### Customer Management Program CLI
+
+We provide a sample skeleton code for the customer management program CLI. Your task in this assignment is to extend this code so that it supports all the command validation features explained below. You can use your own skeleton code if you want, but it needs to behave exactly the same as described below.
+
+The basic features for the CLI are as below.
+
+* The CLI prints out a prompt of a form:
+    ```bash
+    >
+    ```
+* If an entered command-line includes spaces and a new line character('\n') only, the program should   print the next prompt and wait for the next command-line.
+    ```bash
+    > 
+
+    > 
+    ```
+* The exit command should exit the program imediately. This command should not take any argument.
+    ```bash    
+    > exit
+    ```
+  Note that exit command is already implemented in the skeleton code.
+  
+* The reg(register) command should take three arguments - an ID, a name (NAME) and a purchase amount   (PURCHASE) - of a customer to register.
+
+  A command-line has to specify the type before each argument. In our program, '-i', '-n' and '-p'     should proceed before the actual content of ID, NAME and PURCHASE, respectively. Note that there     can be any number of spaces (except the new line character) between a type specifier(-i, -n, -p)     and an argument. We call the combination of a type specifier and an argument an option. The order     of the options is unimportant, but the CLI should not take duplicate options in the same line.
+
+    reg -i ID -n NAME -p PURCHASE
+    
+The table below shows some examples of reg.
+Standard Input Stream	Standard Error Stream
+reg -i ch.hwang128 -n 'Changho Hwang' -p 123	
+reg -n 'Sangwook Bae' -p 2090 -i baesangwook89	
+reg -n 'YoungGyoun Moon' -i ygmoon -p 50492	
+The unreg (unregister) command should take either an ID or a name of a customer to unregister:
+unreg -i ID
+
+unreg -n NAME 
+The table below shows some real examples of using unreg command.
+Standard Input Stream	Standard Error Stream
+unreg -i ch.hwang128	
+unreg -n 'Sangwook Bae'	
+unreg -i ygmoon	
+The find (search) command should take either an ID or a name of the customer to search. The argument validation process of find is exactly the same as that of unreg while their real operations are different.
+find -i ID
+
+find -n NAME
+The table below shows some examples of find.
+Standard Input Stream	Standard Error Stream
+find -n 'Changho Hwang'	
+find -i baesangwook89	
+find -n 'YoungGyoun Moon'	
+There should be at least one space character (any space character except a new line character like ' ', '\t', etc.) between the commands and options. Additional space characters are allowed at the beginning, at the end and between the commands and options. You can use isspace function to match a space character including a new line character. You may have to re-check whether a character is a new line character to handle it exceptionally. The table below shows examples of this feature.
+Standard Input Stream	Standard Error Stream
+   reg -i ch.hwang128 -n 'Changho Hwang' -p 431	
+     reg    -i   baesangwook89 -n  'Sangwook Bae'   -p 2855	
+ unreg  -i ygmoon	
+  find -n    'YoungGyoun Moon'	
+reg-i ch.hwang128 -n 'Changho Hwang' -p 6523	ERROR: Undefined Command
+reg -i baesangwook89 -n 'Sangwook Bae'-p 64	ERROR: Invalid Option Argument
+unreg -iygmoon	ERROR: Undefined Option The error messages will be explained below.
+The CLI should handle EOF properly. If the program meets EOF, it means there is no more input to read, thus the program shouldn't require any more input and it should exit (by calling exit(0);) . Before exit, if the already-typed command is invalid, the program should print the corresponding error message and then exit immediately.
+
+A program meets EOF when it reaches the end of a file stream. In most cases, a CLI program will not meet EOF because if there is nothing to read in stdin, the program just waits until something is typed in. However, you can make the CLI meet EOF using ^D(ctrl + d). Typing ^D forces the program to read whatever is buffered at stdin immediately. If there is something typed already in stdin, the program will read it, but if there is nothing in stdin, ^D forces the program to read EOF. You can test your program whether it handles EOF properly by using this feature.
+
+For example, if you type in the following:
+
+find -i abc
+and then type ^D without enter ('\n'), the program will read 'find -i abc' and then will wait for the rest of the command. If you continue to type in some more, for example,
+
+def
+and then type in ^D, the program will think that the entered command is 'find -i abcdef', and then will wait again for the rest of the command. However, if you type in ^D one more time (still without an enter), the program will read EOF and exit immediately, because there is nothing typed additionaly in stdin. If the entered command was invalid, the program should print the corresponding error message before exit. For more detail, please check how the given solution binary works with ^D.
+
+The program has to handle any input errors correctly. The program should scan the input line from left to right, and when it encounters an error, it should print out an error message and stop processing the line. That is, it should stop at the first error it encounters and move on to the next input line.
+
+The first word in a line should be a valid command. The first word refers to the first occurence of a sequence of non-space characters. If an undefined command (anything other than exit, reg, unreg and find) is given, the program should print out an error message "ERROR: Undefined Command" to stderr. The following lines are example error cases:
+Standard Input Stream	Standard Error Stream
+undefcmd	ERROR: Undefined Command
+undefcmd -i ygmoon	ERROR: Undefined Command
+undefcmd -u UNDEFOPT	ERROR: Undefined Command
+find-i ch.hwang128	ERROR: Undefined Command
+fin -i baesangwook89	ERROR: Undefined Command
+finda -i ygmoon	ERROR: Undefined Command
+If an ambiguous option is used, the program should print an error message "ERROR: Ambiguous Argument". In this program, the only case corresponding to this case is when both ID and NAME are given to find or unreg:
+Standard Input Stream	Standard Error Stream
+find -i ch.hwang128 -n 'Changho Hwang'	ERROR: Ambiguous Argument
+unreg -n 'Sangwook Bae' -i baesangwook89	ERROR: Ambiguous Argument
+If an invalid option (or valid option in a wrong format) is provided, the program should print an error message "ERROR: Undefined Option". Here are the examples:
+Standard Input Stream	Standard Error Stream
+exit -i	ERROR: Undefined Option
+exit -i ygmoon	ERROR: Undefined Option
+find -p 1234	ERROR: Undefined Option
+unreg -p 54512	ERROR: Undefined Option
+reg -u UNDEFOPT	ERROR: Undefined Option
+reg -i ch.hwang128 -n 'Changho Hwang' -p	ERROR: Undefined Option
+unreg -	ERROR: Undefined Option
+unreg -n	ERROR: Undefined Option
+reg -i baesangwook89 -n 'Sangwook Bae' -p 654 -u UNDEFOPT	ERROR: Undefined Option
+reg baesangwook89	ERROR: Undefined Option
+reg -n 'Sangwook Bae' baesangwook89	ERROR: Undefined Option
+If the option of the same type is provided multiple times in a command line, the program should print out an error message, "ERROR: Multiple Same Options" regardless of whether the content of the repeated argument is identical or not. Here are some examples:
+Standard Input Stream	Standard Error Stream
+find -i ch.hwang128 -i ch.hwang128	ERROR: Multiple Same Options
+unreg -n 'YoungGyoun Moon' -n 'Changho Hwang'	ERROR: Multiple Same Options
+reg -i baesangwook89 -p 9 -n 'Sangwook Bae' -p 432	ERROR: Multiple Same Options
+If a command ends prematurely, the program should print out an error message "ERROR: Need More Option". Here are some examples:
+Standard Input Stream	Standard Error Stream
+find	ERROR: Need More Option
+unreg	ERROR: Need More Option
+reg -i baesangwook89 -n 'Sangwook Bae'	ERROR: Need More Option
+Note that this error case has the lowest priority among other error cases.
+Finally, if an argument doesn't follow the 'Argument Rules' described below, the program should print out an error message "ERROR: Invalid Option Argument". This will be explained precisely in the next section, 'Arugment Rules'.
+Note these things: 
+1. The program should stop processing the current line when it encounters an error. 
+2. All error messages should go out to stderr.
+3. Nothing is printed (either to stdout or stderr) if there's no error in the line.
+4. The error messages should be exactly the same as described above.
