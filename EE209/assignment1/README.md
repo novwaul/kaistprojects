@@ -2,14 +2,15 @@ KAIST EE 209: Programming Structures for EE
 ===========================================
 Assignment 1: Customer Management Program
 -----------------------------------------
-* Part 1 - Argument Validation
--------------------------------
-Purpose
+Part 1 - Argument Validation
+----------------------------
+----------------------------
+* Purpose
 The purpose of this assignment is to help you learn or review (1) the fundamentals of the C programming language, (2) the details of implementing command prompts in C, (3) how to use the GNU/Unix programming tools, especially bash, emacs, and gcc209.
-------------------------------------------------------------
-Rules
+
+* Rules
 Make sure you study the course Policy web page before doing this assignment or any of the EE 209 assignments. In particular, note that you may consult with the course instructors, lab TAs, KLMS, etc. while doing assignments, as prescribed by that web page. However, there is one exception...
--------------------------------------------------------------
+
 Throughout the semester, each assignment will have an "on your own" part. You must do that part of the assignment completely on your own, without consulting with the course instructors, lab TAs, listserv, etc., except for clarification of requirements. You might think of the "on your own" part of each assignment as a small take-home exam.
 
 For this assignment, "checking for a missing or malformed option parameter" (as described below) is the "on your own" part. That part is worth 10% of this assignment.
