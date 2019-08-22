@@ -81,52 +81,74 @@ The basic features for the CLI are as below.
 * The reg(register) command should take three arguments - an ID, a name (NAME) and a purchase amount   (PURCHASE) - of a customer to register.
 
   A command-line has to specify the type before each argument. In our program, '-i', '-n' and '-p'     should proceed before the actual content of ID, NAME and PURCHASE, respectively. Note that there     can be any number of spaces (except the new line character) between a type specifier(-i, -n, -p)     and an argument. We call the combination of a type specifier and an argument an option. The order     of the options is unimportant, but the CLI should not take duplicate options in the same line.
-
+    ```bash
     reg -i ID -n NAME -p PURCHASE
-    
-The table below shows some examples of reg.
-Standard Input Stream	Standard Error Stream
-reg -i ch.hwang128 -n 'Changho Hwang' -p 123	
-reg -n 'Sangwook Bae' -p 2090 -i baesangwook89	
-reg -n 'YoungGyoun Moon' -i ygmoon -p 50492	
-The unreg (unregister) command should take either an ID or a name of a customer to unregister:
-unreg -i ID
+    ```
+  The table below shows some examples of reg.
+  
+  | Standard Input Stream |	Standard Error Stream |
+  |---|---|
+  |reg -i ch.hwang128 -n 'Changho Hwang' -p 123	| |
+  |reg -n 'Sangwook Bae' -p 2090 -i baesangwook89 | |
+  |reg -n 'YoungGyoun Moon' -i ygmoon -p 50492 | |
+  
+* The unreg (unregister) command should take either an ID or a name of a customer to unregister:
+  ```bash
+  unreg -i ID
+  ```
+  ```bash
+  unreg -n NAME
+  ```
+  The table below shows some real examples of using unreg command.
+  
+  | Standard Input Stream | Standard Error Stream |
+  | --- | --- |
+  | unreg -i ch.hwang128 | |	
+  | unreg -n 'Sangwook Bae'	| |
+  | unreg -i ygmoon |
+  
+* The find (search) command should take either an ID or a name of the customer to search. The           argument validation process of find is exactly the same as that of unreg while their real             operations are different.
+```bash 
+  find -i ID
+```
+```bash
+  find -n NAME
+```
+  The table below shows some examples of find.
 
-unreg -n NAME 
-The table below shows some real examples of using unreg command.
-Standard Input Stream	Standard Error Stream
-unreg -i ch.hwang128	
-unreg -n 'Sangwook Bae'	
-unreg -i ygmoon	
-The find (search) command should take either an ID or a name of the customer to search. The argument validation process of find is exactly the same as that of unreg while their real operations are different.
-find -i ID
+  | Standard Input Stream	| Standard Error Stream |
+  | --- | --- |
+  | find -n 'Changho Hwang'	| |
+  | find -i baesangwook89 | |	
+  |find -n 'YoungGyoun Moon' | |
+  
+* There should be at least one space character (any space character except a new line character like   ' ', '\t', etc.) between the commands and options. Additional space characters are allowed at the     beginning, at the end and between the commands and options. You can use isspace function to match a   space character including a new line character. You may have to re-check whether a character is a     new line character to handle it exceptionally. The table below shows examples of this feature.
 
-find -n NAME
-The table below shows some examples of find.
-Standard Input Stream	Standard Error Stream
-find -n 'Changho Hwang'	
-find -i baesangwook89	
-find -n 'YoungGyoun Moon'	
-There should be at least one space character (any space character except a new line character like ' ', '\t', etc.) between the commands and options. Additional space characters are allowed at the beginning, at the end and between the commands and options. You can use isspace function to match a space character including a new line character. You may have to re-check whether a character is a new line character to handle it exceptionally. The table below shows examples of this feature.
-Standard Input Stream	Standard Error Stream
-   reg -i ch.hwang128 -n 'Changho Hwang' -p 431	
-     reg    -i   baesangwook89 -n  'Sangwook Bae'   -p 2855	
- unreg  -i ygmoon	
-  find -n    'YoungGyoun Moon'	
-reg-i ch.hwang128 -n 'Changho Hwang' -p 6523	ERROR: Undefined Command
-reg -i baesangwook89 -n 'Sangwook Bae'-p 64	ERROR: Invalid Option Argument
-unreg -iygmoon	ERROR: Undefined Option The error messages will be explained below.
-The CLI should handle EOF properly. If the program meets EOF, it means there is no more input to read, thus the program shouldn't require any more input and it should exit (by calling exit(0);) . Before exit, if the already-typed command is invalid, the program should print the corresponding error message and then exit immediately.
+| Standard Input Stream	| Standard Error Stream |
+ |---|---|
+ |reg -i ch.hwang128 -n 'Changho Hwang' -p 431 | |	
+ | reg    -i   baesangwook89 -n  'Sangwook Bae'   -p 2855 | |	
+ | unreg  -i ygmoon	| |
+ | find -n    'YoungGyoun Moon'	| |
+| reg-i ch.hwang128 -n 'Changho Hwang' -p 6523	| ERROR: Undefined Command |
+| reg -i baesangwook89 -n 'Sangwook Bae'-p 64	| ERROR: Invalid Option Argument |
+| unreg -iygmoon	| ERROR: Undefined Option | 
 
-A program meets EOF when it reaches the end of a file stream. In most cases, a CLI program will not meet EOF because if there is nothing to read in stdin, the program just waits until something is typed in. However, you can make the CLI meet EOF using ^D(ctrl + d). Typing ^D forces the program to read whatever is buffered at stdin immediately. If there is something typed already in stdin, the program will read it, but if there is nothing in stdin, ^D forces the program to read EOF. You can test your program whether it handles EOF properly by using this feature.
+  The error messages will be explained below.
+  
+* The CLI should handle EOF properly. If the program meets EOF, it means there is no more input to     read, thus the program shouldn't require any more input and it should exit (by calling exit(0);) .   Before exit, if the already-typed command is invalid, the program should print the corresponding     error message and then exit immediately.
 
-For example, if you type in the following:
+  A program meets EOF when it reaches the end of a file stream. In most cases, a CLI program will not   meet EOF because if there is nothing to read in stdin, the program just waits until something is     typed in. However, you can make the CLI meet EOF using ^D(ctrl + d). Typing ^D forces the program     to read whatever is buffered at stdin immediately. If there is something typed already in stdin,     he program will read it, but if there is nothing in stdin, ^D forces the program to read EOF. You     can test your program whether it handles EOF properly by using this feature.
 
+  For example, if you type in the following:
+```bash
 find -i abc
-and then type ^D without enter ('\n'), the program will read 'find -i abc' and then will wait for the rest of the command. If you continue to type in some more, for example,
-
+```
+  and then type ^D without enter ('\n'), the program will read 'find -i abc' and then will wait for     the rest of the command. If you continue to type in some more, for example,
+```bash
 def
-and then type in ^D, the program will think that the entered command is 'find -i abcdef', and then will wait again for the rest of the command. However, if you type in ^D one more time (still without an enter), the program will read EOF and exit immediately, because there is nothing typed additionaly in stdin. If the entered command was invalid, the program should print the corresponding error message before exit. For more detail, please check how the given solution binary works with ^D.
+```
+  and then type in ^D, the program will think that the entered command is 'find -i abcdef', and then   will wait again for the rest of the command. However, if you type in ^D one more time (still         without an enter), the program will read EOF and exit immediately, because there is nothing typed     additionaly in stdin. If the entered command was invalid, the program should print the               corresponding error message before exit. For more detail, please check how the given solution         binary works with ^D.
 
 The program has to handle any input errors correctly. The program should scan the input line from left to right, and when it encounters an error, it should print out an error message and stop processing the line. That is, it should stop at the first error it encounters and move on to the next input line.
 
