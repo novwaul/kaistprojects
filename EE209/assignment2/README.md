@@ -27,11 +27,11 @@ The following table shows the required basic string functions in Part 1 and thei
 
 |Str Function|	Standard C Function	|Man page link|
 |---|---|---|
-|strGetLength	|strlen	|strlen man page|
-|StrCopy	|strcpy	|strcpy man page|
-|StrCompare	|strcmp	|strcmp man page|
-|StrSearch	|strstr	|strstr man page|
-|StrConcat	|strcat	|strcat man page|
+|strGetLength	|strlen	|[strlen man page](http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/string/man/strlen.txt)|
+|StrCopy	|strcpy	|[strcpy man page](http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/string/man/strcpy.txt)|
+|StrCompare	|strcmp	|[strcmp man page](http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/string/man/strcmp.txt)|
+|StrSearch	|strstr	|[strstr man page](http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/string/man/strstr.txt)|
+|StrConcat	|strcat	|[strcat man page](http://www.ndsl.kaist.edu/~kyoungsoo/ee209_2017_spring/assignment/string/man/strcat.txt)|
 
 Use the *Str* module's interface in a file named str.h, and place your *Str* function definitions in str.c.
 
