@@ -147,7 +147,7 @@ microsoft.txt@19:became Alphabet's leading subsidiary, as well as the parent for
 * Rules for Find and Replace
   * *string1* cannot be an empty string. In such a case, your program should stop with a proper error message (e.g., "Error: Can't replace an empty substring").
   * Other string arguments (*string2*, *search-string*) can be an empty string. That is, an empty search string matches any line, and if *string2* is an empty string, it removes any occurrences of *string1* in the matching line.
-##### Tips:
+#### Tips:
 
 We provide a skeleton code file (sgrep.c). You can start with the file.
 *fgets* should be useful for reading a line from a file. 'man fgets' should give you more information.
