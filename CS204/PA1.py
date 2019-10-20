@@ -122,7 +122,7 @@ def solution(maps):
     print("Shortest Length : %d" %(answer))
     return answer
 
-maps = Generate_maps(10,10)
-#maps = map5
+#maps = Generate_maps(10,10)
+maps = map5
 Display_maps(maps)
 solution(maps)
