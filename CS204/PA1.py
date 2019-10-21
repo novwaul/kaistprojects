@@ -33,10 +33,10 @@ def Generate_maps(m,n):
     #Tresure Position (1. random or 2. [m,n])
 
     #1. Random Tresure
-    #maps[randint(0,m-1)][randint(0,n-1)] = 2
+    maps[randint(0,m-1)][randint(0,n-1)] = 2
 
     #2. Fixed Tresure
-    maps[m-1][n-1] = 2
+    #maps[m-1][n-1] = 2
 
     return maps
 
@@ -122,7 +122,7 @@ def solution(maps):
     print("Shortest Length : %d" %(answer))
     return answer
 
-#maps = Generate_maps(10,10)
-maps = map5
+maps = Generate_maps(10,10)
+#maps = map5
 Display_maps(maps)
 solution(maps)
