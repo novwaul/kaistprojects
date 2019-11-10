@@ -54,4 +54,4 @@ def Display_maps(matrix):
 maps = Generate_maps(10,10)
 minLenProblemSolver = problemSolver(maps)
 Display_maps(maps)
-minLenProblemSolver.findMinLenToTreasure()
+minLenProblemSolver.giveSolution()
