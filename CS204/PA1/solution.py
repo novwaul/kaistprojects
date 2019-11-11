@@ -9,8 +9,8 @@ class problemSolver:
 	def giveSolution(self):
 		try:
 			return self.findMinLenToTreasure()
-		except:
-			return -1
+		except NoPathException as e:
+			return e.returnErrValue()
 	
 	def findMinLenToTreasure(self):
 		passedPositions = ()
@@ -18,32 +18,47 @@ class problemSolver:
 
 		self.collectPathLen(startPosition, passedPositions)
 		if len(self.lengthCollection) == 0:
-			raise Exception
+			raise NoPathException()
 		else:
 			return min(self.lengthCollection)
 	
 	def collectPathLen(self, Pos, passedPositions):
-		if Pos in passedPositions:
+		if self.isInvalidPosition(Pos, passedPositions):
 			return
-		if self.isTreasure(Pos):
+		elif self.isTreasure(Pos):
 			self.addPathLen(passedPositions)
 			return
-		if Pos[0] > 0 and self.maps[Pos[0]-1][Pos[1]] != 0:
-			self.collectPathLen([Pos[0]-1,Pos[1]],passedPositions + (Pos,))
-		if Pos[1] > 0 and self.maps[Pos[0]][Pos[1]-1] != 0:
-			self.collectPathLen([Pos[0],Pos[1]-1],passedPositions + (Pos,))
-		if Pos[0] < self.rank-1 and self.maps[Pos[0]+1][Pos[1]] != 0:
-			self.collectPathLen([Pos[0]+1,Pos[1]],passedPositions + (Pos,))
-		if Pos[1] < self.column-1 and self.maps[Pos[0]][Pos[1]+1] != 0:
-			self.collectPathLen([Pos[0],Pos[1]+1],passedPositions + (Pos,))
-		return
+		else:
+			self.collectPathLen([Pos[0] + 1, Pos[1]],passedPositions + (Pos,))
+			self.collectPathLen([Pos[0] - 1, Pos[1]],passedPositions + (Pos,))
+			self.collectPathLen([Pos[0], Pos[1] + 1],passedPositions + (Pos,))
+			self.collectPathLen([Pos[0], Pos[1] - 1],passedPositions + (Pos,))
+			return
+	
+	def isInvalidPosition(self, position, passedPositions):
+		return self.checkBound(position) or self.checkGoBack(position, passedPositions) or self.checkWall(position)
 
-	def isTreasure(self, Position):
-		return self.maps[Position[0]][Position[1]] == 2
+	def checkBound(self, position):
+		return 0 > position[0] or position[0] >= self.rank or 0 > position[1] or position[1] >= self.column
+	
+	def checkGoBack(self, position, passedPositions):
+		return position in passedPositions
+
+	def checkWall(self, position):
+		return self.maps[position[0]][position[1]] == 0
+
+	def isTreasure(self, position):
+		return self.maps[position[0]][position[1]] == 2
 	
 	def addPathLen(self, passedPositions):
 		length = len(passedPositions)
 		lengthCollection = self.lengthCollection
 		lengthCollection.append(length)
 		return
-	 
+
+class NoPathException(Exception):
+	def __init__(self, value = -1):
+		self.value = value
+	
+	def returnErrValue(self):
+		return self.value

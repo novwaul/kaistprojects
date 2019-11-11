@@ -54,4 +54,5 @@ def Display_maps(matrix):
 maps = Generate_maps(10,10)
 minLenProblemSolver = problemSolver(maps)
 Display_maps(maps)
-minLenProblemSolver.giveSolution()
+answer = minLenProblemSolver.giveSolution()
+print ("Shortest Length: ", answer)
