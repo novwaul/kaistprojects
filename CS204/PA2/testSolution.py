@@ -16,6 +16,11 @@ class testSolution(unittest.TestCase):
         stringForTest = "BBCCEBB"
         result = solution.Main(stringForTest)
         self.assertEqual([6,1,2,7,9,6,1], result)
+
+    def testValidTripleString(self):
+        stringForTest = "ABBBC"
+        result = solution.Main(stringForTest)
+        self.assertEqual([0,1,6,1,2], result)
     
     def testInvalidString(self):
         stringForTest = "ADCBB"
