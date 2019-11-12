@@ -16,23 +16,23 @@ class problemSolver:
 		passedPositions = ()
 		startPosition = [0,0]
 
-		self.collectPathLen(startPosition, passedPositions)
+		self.collectAllPathLen(startPosition, passedPositions)
 		if len(self.lengthCollection) == 0:
 			raise NoPathException()
 		else:
 			return min(self.lengthCollection)
 	
-	def collectPathLen(self, Pos, passedPositions):
+	def collectAllPathLen(self, Pos, passedPositions):
 		if self.isInvalidPosition(Pos, passedPositions):
 			return
 		elif self.isTreasure(Pos):
 			self.addPathLen(passedPositions)
 			return
 		else:
-			self.collectPathLen([Pos[0] + 1, Pos[1]],passedPositions + (Pos,))
-			self.collectPathLen([Pos[0] - 1, Pos[1]],passedPositions + (Pos,))
-			self.collectPathLen([Pos[0], Pos[1] + 1],passedPositions + (Pos,))
-			self.collectPathLen([Pos[0], Pos[1] - 1],passedPositions + (Pos,))
+			self.collectAllPathLen([Pos[0] + 1, Pos[1]],passedPositions + (Pos,))
+			self.collectAllPathLen([Pos[0] - 1, Pos[1]],passedPositions + (Pos,))
+			self.collectAllPathLen([Pos[0], Pos[1] + 1],passedPositions + (Pos,))
+			self.collectAllPathLen([Pos[0], Pos[1] - 1],passedPositions + (Pos,))
 			return
 	
 	def isInvalidPosition(self, position, passedPositions):
