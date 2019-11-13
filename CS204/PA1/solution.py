@@ -1,12 +1,21 @@
 class problemSolver:
 
-	def __init__(self, maps):
+	def __init__(self):
+		self.maps = None
+		self.rank = None
+		self.column = None
+		self.lengthCollection = []
+	
+	def giveSolution(self, maps):
+		self.getProblem(maps)
+		return self.solveProblem()
+
+	def getProblem(self, maps):
 		self.maps = maps
 		self.rank = len(maps)
 		self.column = len(maps[0])
-		self.lengthCollection = []
-	
-	def giveSolution(self):
+
+	def solveProblem(self):
 		try:
 			return self.findMinLenToTreasure()
 		except NoPathException as e:

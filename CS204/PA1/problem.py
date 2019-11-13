@@ -52,7 +52,7 @@ def Display_maps(matrix):
     print("")
 
 maps = Generate_maps(10,10)
-minLenProblemSolver = problemSolver(maps)
+minLenProblemSolver = problemSolver()
 Display_maps(maps)
-answer = minLenProblemSolver.giveSolution()
+answer = minLenProblemSolver.giveSolution(maps)
 print ("Shortest Length: ", answer)

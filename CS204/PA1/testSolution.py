@@ -9,8 +9,8 @@ class testSolution(unittest.TestCase):
 			[1,0,1,1,1],
 			[1,1,1,0,1],
 			[0,0,0,0,2]]
-          minLenProblemSolver = problemSolver(mapForTest)
-          result = minLenProblemSolver.giveSolution()
+          minLenProblemSolver = problemSolver()
+          result = minLenProblemSolver.giveSolution(mapForTest)
           self.assertEqual(10, result)
       
       def testSameLen(self):
@@ -19,8 +19,8 @@ class testSolution(unittest.TestCase):
 			[1,1,2,1,1],
 			[1,0,1,0,1],
 			[1,1,1,1,1]]
-          minLenProblemSolver = problemSolver(mapForTest)
-          result = minLenProblemSolver.giveSolution()
+          minLenProblemSolver = problemSolver()
+          result = minLenProblemSolver.giveSolution(mapForTest)
           self.assertEqual(4, result)
 
       def testNoPath(self):
@@ -29,8 +29,8 @@ class testSolution(unittest.TestCase):
 			[1,0,1,1,1],
 			[1,1,1,0,0],
 			[0,0,0,0,2]]
-          minLenProblemSolver = problemSolver(mapForTest)
-          result = minLenProblemSolver.giveSolution() 
+          minLenProblemSolver = problemSolver()
+          result = minLenProblemSolver.giveSolution(mapForTest) 
           self.assertEqual(-1, result)
 
       def testOnlyOnePath(self):
@@ -39,8 +39,8 @@ class testSolution(unittest.TestCase):
 			[1,1,1,1,1],
 			[1,0,0,0,0],
 			[1,1,1,1,2]]
-          minLenProblemSolver = problemSolver(mapForTest)
-          result = minLenProblemSolver.giveSolution()
+          minLenProblemSolver = problemSolver()
+          result = minLenProblemSolver.giveSolution(mapForTest)
           self.assertEqual(16, result)
 
       def testOnlyOnePathWithLargeSize(self):
@@ -53,8 +53,8 @@ class testSolution(unittest.TestCase):
 			[1,0,1,1,1,1,1,0,1],
 			[1,0,0,0,0,0,0,0,1], 
 			[1,1,1,1,1,1,1,1,1]]
-          minLenProblemSolver = problemSolver(mapForTest)
-          result = minLenProblemSolver.giveSolution() 
+          minLenProblemSolver = problemSolver()
+          result = minLenProblemSolver.giveSolution(mapForTest) 
           self.assertEqual(48, result)
 
 
