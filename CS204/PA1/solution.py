@@ -7,10 +7,10 @@ class problemSolver:
 		self.lengthCollection = []
 	
 	def giveSolution(self, maps):
-		self.getProblem(maps)
+		self.setAttributesToSolveProblem(maps)
 		return self.solveProblem()
 
-	def getProblem(self, maps):
+	def setAttributesToSolveProblem(self, maps):
 		self.maps = maps
 		self.rank = len(maps)
 		self.column = len(maps[0])
