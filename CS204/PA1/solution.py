@@ -17,6 +17,9 @@ class problemSolver:
 		startPosition = [0,0]
 
 		self.collectAllPathLen(startPosition, passedPositions)
+		self.findMinLenIfExist()
+	
+	def findMinLenIfExist(self):
 		if len(self.lengthCollection) == 0:
 			raise NoPathException()
 		else:
