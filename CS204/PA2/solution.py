@@ -1,42 +1,3 @@
-from enum import Enum
-
-class vertex:
-    def __init__(self, id, neighborIds):
-        self.id = id
-        self.neighborIds = neighborIds
-
-    def getId(self):
-        return self.id
-    
-    def getNeighborIds(self):
-        return self.neighborIds
-        
-class vertexId(Enum):
-    outerA = 0
-    outerB = 1
-    outerC = 2
-    outerD = 3
-    outerE = 4
-    innerA = 5
-    innerB = 6
-    innerC = 7
-    innerD = 8
-    innerE = 9
-
-#TODO chenge magic number to known name
-class vertexFactory(vertexId):
-    def makeInnerAndOuterVertex(self, name):
-        if (name == 'A')
-            return [vertex(innerA, [outerA,innerD,innerC]), vertex(outerA, [outerB,outerE,innerA])]
-        elif (name == 'B')
-            return [vertex(innerB, [outerB,innerD,innerE]), vertex(outerB, [outerA,outerC,innerB])]
-        elif (name == 'C')
-            return [vertex(innerC, [outerC,innerA,innerE]), vertex(outerC, [,3,7])]
-        elif (name == 'D')
-            return [vertex(innerD, [3,5,6]), vertex(outerD, [2,4,8])]
-        elif (name == 'E')
-            return [vertex(innerE, [4,6,7]), vertex(outerE, [0,3,9])]
-
 #TODO use OOP to reduce duplication
 def FindVertexPath(solution, input):
     if(len(input) == 0):
@@ -203,7 +164,6 @@ def FindVertexPath(solution, input):
         input.insert(0,vertex)
         return False
 
-
 def Main(S):
     Sol = []
     Input = list(S)
@@ -211,3 +171,4 @@ def Main(S):
         return Sol
     else:
         return -1
+
