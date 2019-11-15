@@ -2,6 +2,20 @@ import unittest
 import solution
 
 class testSolution(unittest.TestCase):
+    def testMakeInnerVertex(self):
+        testVertexName = 'B'
+        vertexFactory = solution.vertexFactory()
+        vertexForTest = vertexFactory.makeInnerVertex(testVertexName)
+        vertexForAnswer = solution.vertex(6, 1, [8, 9])
+        self.assertEqual(True, vertexForAnswer == vertexForTest)
+
+    def testMakeOuterVertex(self):
+        testVertexName = 'B'
+        vertexFactory = solution.vertexFactory()
+        vertexForTest = vertexFactory.makeOuterVertex(testVertexName)
+        vertexForAnswer = solution.vertex(1, 6, [0, 2])
+        self.assertEqual(True, vertexForAnswer == vertexForTest)
+
     def testValidDuplicateString(self):
         stringForTest = "BDDEA"
         result = solution.Main(stringForTest)
