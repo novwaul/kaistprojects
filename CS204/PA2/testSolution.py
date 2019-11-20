@@ -15,6 +15,11 @@ class testSolution(unittest.TestCase):
         vertexForTest = vertexFactory.makeOuterVertex(testVertexName)
         vertexForAnswer = solution.vertex(1, 6, [0, 2])
         self.assertEqual(True, vertexForAnswer == vertexForTest)
+    
+    def testMakeOuterVertexWithInvalidInput(self):
+        testVertexName = 'F'
+        vertexFactory = solution.outerVertexFactory()
+        self.assertRaises(solution.NoEntryException, vertexFactory.makeOuterVertex, testVertexName)
 
     def testValidDuplicateString(self):
         stringForTest = "BDDEA"
@@ -36,8 +41,13 @@ class testSolution(unittest.TestCase):
         result = solution.Main(stringForTest)
         self.assertEqual([0,1,6,1,2], result)
     
-    def testInvalidString(self):
+    def testNoPathString(self):
         stringForTest = "ADCBB"
+        result = solution.Main(stringForTest)
+        self.assertEqual(-1, result)
+    
+    def testInvalidStringWithInvalidVertex(self):
+        stringForTest = "FFFFFFFF"
         result = solution.Main(stringForTest)
         self.assertEqual(-1, result)
         
