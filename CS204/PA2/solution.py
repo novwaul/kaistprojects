@@ -124,58 +124,59 @@ class NoEntryException(Exception):
     def getErrorValue(self):
         return self.errorValue
 
-IVFactory = innerVertexFactory()
-OVFactory = outerVertexFactory()
+class pathFinder:
+    def __init__(self):
+        self.IVFactory = innerVertexFactory()
+        self.OVFactory = outerVertexFactory()
+        self.solution = []
 
-def FindVertexPath(solution, input):
-    if(len(input) == 0):
-        return True
-    else:
-        vertexName = input.pop(0)
-    
-    try:
-        innerVertex = IVFactory.makeInnerVertex(vertexName)
-        outerVertex = OVFactory.makeOuterVertex(vertexName)
-    except NoEntryException:
-        return False
+    def Main(self, S):
+        try:
+            if(self.FindVertexPath(S, 0)):
+                return self.solution
+            else:
+                return -1
+        except NoEntryException:
+            return -1
 
-    if(len(solution) == 0):
-        solution.append(innerVertex.getId())
-        if(False == FindVertexPath(solution, input)):
-            solution.pop()
-            solution.append(outerVertex.getId())
-            if (False == FindVertexPath(solution, input)):
-                input.insert(0, vertexName)
-                solution.pop()
-                return False
-            else: return True
-        else: return True
-    else:
-        lastVertexId = solution[-1]
-        if(lastVertexId in innerVertex.getNeighborsId() or lastVertexId == innerVertex.getOppositeSideId()):
+    def FindVertexPath(self, input, currentIndex):
+        if len(input) == currentIndex:
+            return True
+        else:
+            vertexName = input[currentIndex]
+
+        innerVertex = self.IVFactory.makeInnerVertex(vertexName)
+        outerVertex = self.OVFactory.makeOuterVertex(vertexName)
+        solution = self.solution
+
+        if currentIndex == 0:
             solution.append(innerVertex.getId())
-            if(False == FindVertexPath(solution, input)):
-                input.insert(0, vertexName)
+            nextIndex = currentIndex + 1
+            if(False == self.FindVertexPath(input, nextIndex)):
                 solution.pop()
-                return False
-            else: 
-                return True
-        elif(lastVertexId in outerVertex.getNeighborsId() or lastVertexId == outerVertex.getOppositeSideId()):
-            solution.append(outerVertex.getId())
-            if(False == FindVertexPath(solution, input)):
-                input.insert(0,vertexName)
-                solution.pop()
-                return False
+                solution.append(outerVertex.getId())
+                if (False == self.FindVertexPath(input, nextIndex)):
+                    solution.pop()
+                    return False
+                else: return True
             else: return True
         else:
-            input.insert(0,vertexName)
-            return False
+            nextIndex = currentIndex + 1
+            lastVertexId = solution[-1]
+            if(lastVertexId in innerVertex.getNeighborsId() or lastVertexId == innerVertex.getOppositeSideId()):
+                solution.append(innerVertex.getId())
+                if(False == self.FindVertexPath(input, nextIndex)):
+                    solution.pop()
+                    return False
+                else: 
+                    return True
+            elif(lastVertexId in outerVertex.getNeighborsId() or lastVertexId == outerVertex.getOppositeSideId()):
+                solution.append(outerVertex.getId())
+                if(False == self.FindVertexPath(input, nextIndex)):
+                    solution.pop()
+                    return False
+                else: return True
+            else:
+                return False
 
-def Main(S):
-    Sol = []
-    Input = list(S)
-    if(FindVertexPath(Sol, Input)):
-        return Sol
-    else:
-        return -1
 
