@@ -125,73 +125,56 @@ class NoEntryException(Exception):
         return self.errorValue
 
 class pathFinder:
-    def __init__(self):
+    def Main(self, stringPath):
         self.IVFactory = innerVertexFactory()
         self.OVFactory = outerVertexFactory()
-        self.solution = []
+        self.stringPath = stringPath
+        self.possibleIdPaths = []
+        return self.findPath()
 
-    def Main(self, S):
-        self.stringPath = S
+    def findPath(self):
         try:
-            if(self.findVertex(0)):
-                return self.solution
-            else:
+            self.findVerticies(0, [])
+            if len(self.possibleIdPaths) == 0:
                 return -1
+            else:
+                return self.possibleIdPaths[0]
         except NoEntryException:
             return -1
 
-    def findVertex(self, currentIndex):
-        if self.isStartOfIndex(currentIndex):
-            vertexName = self.stringPath[currentIndex]
+    def findVerticies(self, foundVertexNum, foundVerticies):
+        if self.isFirstVertexToFind(foundVertexNum):
+            vertexName = self.stringPath[foundVertexNum]
             innerVertex = self.IVFactory.makeInnerVertex(vertexName)
             outerVertex = self.OVFactory.makeOuterVertex(vertexName)
-            solution = self.solution
-            nextIndex = currentIndex + 1
-            solution.append(innerVertex.getId())
-            if(False == self.findVertex(nextIndex)):
-                solution.pop()
-                solution.append(outerVertex.getId())
-                if (False == self.findVertex(nextIndex)):
-                    solution.pop()
-                    return False
-                else: 
-                    return True
-            else: 
-                return True
-        elif self.isEndOfIndex(currentIndex):
-            return True
+            self.findVerticies(foundVertexNum + 1, foundVerticies + [innerVertex.getId()])
+            self.findVerticies(foundVertexNum + 1, foundVerticies + [outerVertex.getId()])
+            return
+        elif self.areAllVerticesFound(foundVertexNum):
+            self.possibleIdPaths.append(foundVerticies)
+            return
         else:
-            vertexName = self.stringPath[currentIndex]
+            vertexName = self.stringPath[foundVertexNum]
             innerVertex = self.IVFactory.makeInnerVertex(vertexName)
             outerVertex = self.OVFactory.makeOuterVertex(vertexName)
-            solution = self.solution
-            nextIndex = currentIndex + 1
-            if self.isPrevVertexNextToCurrVertex(innerVertex):
-                solution.append(innerVertex.getId())
-                if(False == self.findVertex(nextIndex)):
-                    solution.pop()
-                    return False
-                else: 
-                    return True
-            elif self.isPrevVertexNextToCurrVertex(outerVertex):
-                solution.append(outerVertex.getId())
-                if(False == self.findVertex(nextIndex)):
-                    solution.pop()
-                    return False
-                else: 
-                    return True
+            if self.isPrevVertexNextToCurrVertex(innerVertex, foundVerticies):
+                self.findVerticies(foundVertexNum + 1, foundVerticies + [innerVertex.getId()])
+            elif self.isPrevVertexNextToCurrVertex(outerVertex, foundVerticies):
+                self.findVerticies(foundVertexNum + 1, foundVerticies + [outerVertex.getId()])
             else:
-                return False
+                return
     
-    def isStartOfIndex(self, currentIndex):
-        return currentIndex == 0
+    def isFirstVertexToFind(self, foundVertexNum):
+        return foundVertexNum == 0
 
-    def isEndOfIndex(self, currentIndex):
-        return len(self.stringPath) == currentIndex
+    def areAllVerticesFound(self, foundVertexNum):
+        return len(self.stringPath) == foundVertexNum
 
-    def isPrevVertexNextToCurrVertex(self, currVertex):
-        prevVertexId = self.solution[-1]
+    def isPrevVertexNextToCurrVertex(self, currVertex, foundVerticies):
+        prevVertexId = foundVerticies[-1]
         return prevVertexId in currVertex.getNeighborsId() or prevVertexId == currVertex.getOppositeSideId()
+    
+    
     
 
 
