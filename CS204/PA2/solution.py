@@ -27,6 +27,24 @@ class vertexConnection:
     def calculateDefaultInnerVertexId(self):
         return (self.defaultVertexNum + self.defaultOuterVertexId) // 2
 
+    def calculateDefaultInnerVertexNeighborsId(self):
+        neighborIdWithSmallerOne = self.getMiddleInnerVertexId()
+        neighborIdwithBiggerOne = self.getNextId(neighborIdWithSmallerOne)
+        return [neighborIdWithSmallerOne, neighborIdwithBiggerOne]
+
+    def calculateDefaultOuterVertexNeighborsId(self):
+        neighborIdWithSmallerOne = self.getLastOuterVertexId()
+        neighborIdwithBiggerOne = self.getNextId(self.defaultOuterVertexId)
+        return [neighborIdWithSmallerOne, neighborIdwithBiggerOne]
+
+    def addInnerVertexOffsetWithModOperation(self, value, vertexOffset):
+        innerVertexNum = self.defaultVertexNum // 2
+        return innerVertexNum + (value + vertexOffset) % innerVertexNum
+
+    def addOuterVertexOffsetWithModOperation(self, value, vertexOffset):
+        outerVertexNum = self.defaultVertexNum // 2
+        return (value + vertexOffset) % outerVertexNum
+
     def calculateVertexOffsetWithBoundCheck(self, vertexName):
         offset = self.calculateVertexOffset(vertexName)
         offsetBound = self.calculateBound()
@@ -47,31 +65,13 @@ class vertexConnection:
     def getNextId(self, id):
         return id + 1
 
-    def addInnerVertexOffsetWithModOperation(self, value, vertexOffset):
-        innerVertexNum = self.defaultVertexNum // 2
-        return innerVertexNum + (value + vertexOffset) % innerVertexNum
-
-    def addOuterVertexOffsetWithModOperation(self, value, vertexOffset):
-        outerVertexNum = self.defaultVertexNum // 2
-        return (value + vertexOffset) % outerVertexNum
-
     def getMiddleInnerVertexId(self):
         return self.defaultInnerVertexId + self.defaultVertexNum // 4
 
     def getLastOuterVertexId(self):
         return self.defaultOuterVertexId + self.defaultVertexNum // 2 - 1
 
-    def calculateDefaultInnerVertexNeighborsId(self):
-        neighborIdWithSmallerOne = self.getMiddleInnerVertexId()
-        neighborIdwithBiggerOne = self.getNextId(neighborIdWithSmallerOne)
-        return [neighborIdWithSmallerOne, neighborIdwithBiggerOne]
-
-    def calculateDefaultOuterVertexNeighborsId(self):
-        neighborIdWithSmallerOne = self.getLastOuterVertexId()
-        neighborIdwithBiggerOne = self.getNextId(self.defaultOuterVertexId)
-        return [neighborIdWithSmallerOne, neighborIdwithBiggerOne]
-
-class innerVertexFactory(vertexConnection):    
+class innerVertexFactory(vertexConnection): 
     def makeInnerVertex(self, vertexName):
         id = self.calculateInnerVertexId(vertexName)
         oppositeSideId = self.calculateOppositeSideId(id)
@@ -131,52 +131,67 @@ class pathFinder:
         self.solution = []
 
     def Main(self, S):
+        self.stringPath = S
         try:
-            if(self.FindVertexPath(S, 0)):
+            if(self.findVertex(0)):
                 return self.solution
             else:
                 return -1
         except NoEntryException:
             return -1
 
-    def FindVertexPath(self, input, currentIndex):
-        if len(input) == currentIndex:
-            return True
-        else:
-            vertexName = input[currentIndex]
-
-        innerVertex = self.IVFactory.makeInnerVertex(vertexName)
-        outerVertex = self.OVFactory.makeOuterVertex(vertexName)
-        solution = self.solution
-
-        if currentIndex == 0:
-            solution.append(innerVertex.getId())
+    def findVertex(self, currentIndex):
+        if self.isStartOfIndex(currentIndex):
+            vertexName = self.stringPath[currentIndex]
+            innerVertex = self.IVFactory.makeInnerVertex(vertexName)
+            outerVertex = self.OVFactory.makeOuterVertex(vertexName)
+            solution = self.solution
             nextIndex = currentIndex + 1
-            if(False == self.FindVertexPath(input, nextIndex)):
+            solution.append(innerVertex.getId())
+            if(False == self.findVertex(nextIndex)):
                 solution.pop()
                 solution.append(outerVertex.getId())
-                if (False == self.FindVertexPath(input, nextIndex)):
-                    solution.pop()
-                    return False
-                else: return True
-            else: return True
-        else:
-            nextIndex = currentIndex + 1
-            lastVertexId = solution[-1]
-            if(lastVertexId in innerVertex.getNeighborsId() or lastVertexId == innerVertex.getOppositeSideId()):
-                solution.append(innerVertex.getId())
-                if(False == self.FindVertexPath(input, nextIndex)):
+                if (False == self.findVertex(nextIndex)):
                     solution.pop()
                     return False
                 else: 
                     return True
-            elif(lastVertexId in outerVertex.getNeighborsId() or lastVertexId == outerVertex.getOppositeSideId()):
-                solution.append(outerVertex.getId())
-                if(False == self.FindVertexPath(input, nextIndex)):
+            else: 
+                return True
+        elif self.isEndOfIndex(currentIndex):
+            return True
+        else:
+            vertexName = self.stringPath[currentIndex]
+            innerVertex = self.IVFactory.makeInnerVertex(vertexName)
+            outerVertex = self.OVFactory.makeOuterVertex(vertexName)
+            solution = self.solution
+            nextIndex = currentIndex + 1
+            if self.isPrevVertexNextToCurrVertex(innerVertex):
+                solution.append(innerVertex.getId())
+                if(False == self.findVertex(nextIndex)):
                     solution.pop()
                     return False
-                else: return True
+                else: 
+                    return True
+            elif self.isPrevVertexNextToCurrVertex(outerVertex):
+                solution.append(outerVertex.getId())
+                if(False == self.findVertex(nextIndex)):
+                    solution.pop()
+                    return False
+                else: 
+                    return True
             else:
                 return False
+    
+    def isStartOfIndex(self, currentIndex):
+        return currentIndex == 0
+
+    def isEndOfIndex(self, currentIndex):
+        return len(self.stringPath) == currentIndex
+
+    def isPrevVertexNextToCurrVertex(self, currVertex):
+        prevVertexId = self.solution[-1]
+        return prevVertexId in currVertex.getNeighborsId() or prevVertexId == currVertex.getOppositeSideId()
+    
 
 
