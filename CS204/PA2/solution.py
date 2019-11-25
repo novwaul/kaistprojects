@@ -16,17 +16,15 @@ class vertex:
     def getNeighborsId(self):
         return self.neighborsId
 
-class vertexConnection:
+class defaultVertexConnectionSetter:
     #CAUTION: defaultVertexNum must be even.
     def __init__ (self, defaultVertexName = 'A', defaultVertexId = 0, defaultVertexNum = 10):
         self.defaultVertexName = defaultVertexName
         self.defaultVertexNum = defaultVertexNum
         self.defaultOuterVertexId = defaultVertexId
-        self.defaultInnerVertexId = self.calculateDefaultInnerVertexId()
+        self.defaultInnerVertexId = (self.defaultVertexNum + self.defaultOuterVertexId) // 2
 
-    def calculateDefaultInnerVertexId(self):
-        return (self.defaultVertexNum + self.defaultOuterVertexId) // 2
-
+class vertexConnectionTeller(defaultVertexConnectionSetter):
     def calculateDefaultInnerVertexNeighborsId(self):
         neighborIdWithSmallerOne = self.getMiddleInnerVertexId()
         neighborIdwithBiggerOne = self.getNextId(neighborIdWithSmallerOne)
@@ -37,6 +35,16 @@ class vertexConnection:
         neighborIdwithBiggerOne = self.getNextId(self.defaultOuterVertexId)
         return [neighborIdWithSmallerOne, neighborIdwithBiggerOne]
 
+    def getMiddleInnerVertexId(self):
+        return self.defaultInnerVertexId + self.defaultVertexNum // 4
+
+    def getLastOuterVertexId(self):
+        return self.defaultOuterVertexId + self.defaultVertexNum // 2 - 1
+    
+    def getNextId(self, id):
+        return (id + 1) % self.defaultVertexNum
+    
+class vertexConnectionMath(defaultVertexConnectionSetter):
     def addInnerVertexOffsetWithModOperation(self, value, vertexOffset):
         innerVertexNum = self.defaultVertexNum // 2
         return innerVertexNum + (value + vertexOffset) % innerVertexNum
@@ -62,16 +70,7 @@ class vertexConnection:
     def calculateOppositeSideId(self, id):
         return (id + self.defaultVertexNum // 2) % self.defaultVertexNum
 
-    def getNextId(self, id):
-        return id + 1
-
-    def getMiddleInnerVertexId(self):
-        return self.defaultInnerVertexId + self.defaultVertexNum // 4
-
-    def getLastOuterVertexId(self):
-        return self.defaultOuterVertexId + self.defaultVertexNum // 2 - 1
-
-class innerVertexFactory(vertexConnection): 
+class innerVertexFactory(vertexConnectionTeller, vertexConnectionMath): 
     def makeInnerVertex(self, vertexName):
         id = self.calculateInnerVertexId(vertexName)
         oppositeSideId = self.calculateOppositeSideId(id)
@@ -94,7 +93,7 @@ class innerVertexFactory(vertexConnection):
             newInnerVertexNeighborsId.append(result)
         return newInnerVertexNeighborsId
 
-class outerVertexFactory(vertexConnection):
+class outerVertexFactory(vertexConnectionTeller, vertexConnectionMath):
     def makeOuterVertex(self, vertexName):
         id = self.calculateOuterVertexId(vertexName)
         oppositeSideId = self.calculateOppositeSideId(id)
