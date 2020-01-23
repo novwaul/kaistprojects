@@ -16,74 +16,64 @@ class vertex:
     def getNeighborsId(self):
         return self.neighborsId
 
-class defaultVertexConnectionSetter:
+class vertexConnection:
     #CAUTION: defaultVertexNum must be even.
     def __init__ (self, defaultVertexName = 'A', defaultVertexId = 0, defaultVertexNum = 10):
         self.defaultVertexName = defaultVertexName
         self.defaultVertexNum = defaultVertexNum
         self.defaultOuterVertexId = defaultVertexId
         self.defaultInnerVertexId = (self.defaultVertexNum + self.defaultOuterVertexId) // 2
-
-class vertexConnectionTeller(defaultVertexConnectionSetter):
-    def calculateDefaultInnerVertexNeighborsId(self):
+        
+    def getDefaultInnerVertexNeighborsId(self):
         neighborIdWithSmallerOne = self.getMiddleInnerVertexId()
         neighborIdwithBiggerOne = self.getNextId(neighborIdWithSmallerOne)
         return [neighborIdWithSmallerOne, neighborIdwithBiggerOne]
 
-    def calculateDefaultOuterVertexNeighborsId(self):
+    def getDefaultOuterVertexNeighborsId(self):
         neighborIdWithSmallerOne = self.getLastOuterVertexId()
         neighborIdwithBiggerOne = self.getNextId(self.defaultOuterVertexId)
         return [neighborIdWithSmallerOne, neighborIdwithBiggerOne]
+
+    def getNextId(self, id):
+        return (id + 1) % self.defaultVertexNum
 
     def getMiddleInnerVertexId(self):
         return self.defaultInnerVertexId + self.defaultVertexNum // 4
 
     def getLastOuterVertexId(self):
         return self.defaultOuterVertexId + self.defaultVertexNum // 2 - 1
-    
-    def getNextId(self, id):
-        return (id + 1) % self.defaultVertexNum
-    
-class vertexConnectionMath(defaultVertexConnectionSetter):
-    def addInnerVertexOffsetWithModOperation(self, value, vertexOffset):
-        innerVertexNum = self.defaultVertexNum // 2
-        return innerVertexNum + (value + vertexOffset) % innerVertexNum
 
-    def addOuterVertexOffsetWithModOperation(self, value, vertexOffset):
-        outerVertexNum = self.defaultVertexNum // 2
-        return (value + vertexOffset) % outerVertexNum
-
-    def calculateVertexOffsetWithBoundCheck(self, vertexName):
-        offset = self.calculateVertexOffset(vertexName)
-        offsetBound = self.calculateBound()
+    def getVertexOffsetWithBoundCheck(self, vertexName):
+        offset = self.getVertexOffset(vertexName)
+        offsetBound = self.getBound()
         if abs(offset) < offsetBound:
             return offset
         else:
             raise NoEntryException()
-    
-    def calculateVertexOffset(self, vertexName):
-        return ord(vertexName) - ord(self.defaultVertexName)
 
-    def calculateBound(self):
+    def getBound(self):
         return self.defaultVertexNum // 2
 
-    def calculateOppositeSideId(self, id):
+    def getVertexOffset(self, vertexName):
+        return ord(vertexName) - ord(self.defaultVertexName)
+
+    def getOppositeSideId(self, id):
         return (id + self.defaultVertexNum // 2) % self.defaultVertexNum
 
-class innerVertexFactory(vertexConnectionTeller, vertexConnectionMath): 
+class innerVertexFactory(vertexConnection): 
     def makeInnerVertex(self, vertexName):
-        id = self.calculateInnerVertexId(vertexName)
-        oppositeSideId = self.calculateOppositeSideId(id)
-        neighborsId = self.calculateInnerVertexNeighborsId(vertexName)
+        id = self.getInnerVertexId(vertexName)
+        oppositeSideId = self.getOppositeSideId(id)
+        neighborsId = self.getInnerVertexNeighborsId(vertexName)
         return vertex(id, oppositeSideId, neighborsId)
 
-    def calculateInnerVertexId(self, vertexName):
-        vertexOffset = self.calculateVertexOffsetWithBoundCheck(vertexName)
+    def getInnerVertexId(self, vertexName):
+        vertexOffset = self.getVertexOffsetWithBoundCheck(vertexName)
         return self.defaultInnerVertexId + vertexOffset
 
-    def calculateInnerVertexNeighborsId(self, vertexName):
-        defaultInnerVertexNeighborsId = self.calculateDefaultInnerVertexNeighborsId()
-        vertexOffset = self.calculateVertexOffsetWithBoundCheck(vertexName)
+    def getInnerVertexNeighborsId(self, vertexName):
+        defaultInnerVertexNeighborsId = self.getDefaultInnerVertexNeighborsId()
+        vertexOffset = self.getVertexOffsetWithBoundCheck(vertexName)
         return self.addInnerVertexOffsetToAllEntry(vertexOffset, defaultInnerVertexNeighborsId)
 
     def addInnerVertexOffsetToAllEntry(self, vertexOffset, defaultInnerVertexNeighborsId):
@@ -93,20 +83,24 @@ class innerVertexFactory(vertexConnectionTeller, vertexConnectionMath):
             newInnerVertexNeighborsId.append(result)
         return newInnerVertexNeighborsId
 
-class outerVertexFactory(vertexConnectionTeller, vertexConnectionMath):
+    def addInnerVertexOffsetWithModOperation(self, value, vertexOffset):
+        innerVertexNum = self.defaultVertexNum // 2
+        return innerVertexNum + (value + vertexOffset) % innerVertexNum
+
+class outerVertexFactory(vertexConnection):
     def makeOuterVertex(self, vertexName):
-        id = self.calculateOuterVertexId(vertexName)
-        oppositeSideId = self.calculateOppositeSideId(id)
-        neighborsId = self.calculateOuterVertexNeighborsId(vertexName)
+        id = self.getOuterVertexId(vertexName)
+        oppositeSideId = self.getOppositeSideId(id)
+        neighborsId = self.getOuterVertexNeighborsId(vertexName)
         return vertex(id, oppositeSideId, neighborsId)
     
-    def calculateOuterVertexId(self, vertexName):
-        vertexOffset = self.calculateVertexOffsetWithBoundCheck(vertexName)
+    def getOuterVertexId(self, vertexName):
+        vertexOffset = self.getVertexOffsetWithBoundCheck(vertexName)
         return self.defaultOuterVertexId + vertexOffset
 
-    def calculateOuterVertexNeighborsId(self, vertexName):
-        defaultOuterVertexNeighborsId = self.calculateDefaultOuterVertexNeighborsId()
-        vertexOffset = self.calculateVertexOffsetWithBoundCheck(vertexName)
+    def getOuterVertexNeighborsId(self, vertexName):
+        defaultOuterVertexNeighborsId = self.getDefaultOuterVertexNeighborsId()
+        vertexOffset = self.getVertexOffsetWithBoundCheck(vertexName)
         return self.addOuterVertexOffsetToAllEntry(vertexOffset, defaultOuterVertexNeighborsId)
 
     def addOuterVertexOffsetToAllEntry(self, vertexOffset, defaultOuterVertexNeighborsId):
@@ -115,6 +109,10 @@ class outerVertexFactory(vertexConnectionTeller, vertexConnectionMath):
             result = self.addOuterVertexOffsetWithModOperation(e, vertexOffset)
             newOuterVertexNeighborsId.append(result)
         return newOuterVertexNeighborsId
+
+    def addOuterVertexOffsetWithModOperation(self, value, vertexOffset):
+        outerVertexNum = self.defaultVertexNum // 2
+        return (value + vertexOffset) % outerVertexNum
     
 class NoEntryException(Exception):
     def __init__(self, errorValue = -1):
