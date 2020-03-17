@@ -1,8 +1,8 @@
-# programming-language
+## Programming Language
 Assignments of Programming Language
 
-*Note
-----------------------------------
+
+<Note>
 hw05, hw06 : handwrite assignments
 
 hw09 : summary
